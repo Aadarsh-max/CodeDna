@@ -5,6 +5,7 @@ import { notFound, errorHandler } from "./middleware/errorHandler.js";
 import authRoutes from "./routes/authRoutes.js";
 import repoRoutes from "./routes/repoRoutes.js";
 import analysisRoutes from "./routes/analysisRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/repos", repoRoutes);
 app.use("/api/analysis", analysisRoutes);
+app.use("/api/reports", reportRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
