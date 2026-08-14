@@ -1,0 +1,88 @@
+import { Repository } from "../models/Repository.js";
+import { AnalysisResult } from "../models/AnalysisResult.js";
+import {
+  parseRepository,
+  predictRisk,
+  computeFuzzyScore,
+  generateRefactorPlan,
+  explainPredictions,
+  generateDocumentation,
+} from "../services/aiServiceClient.js";
+
+const runAnalysisPipeline = async (analysisId, repository) => {
+  try {
+    await AnalysisResult.findByIdAndUpdate(analysisId, { status: "running" });
+
+    const parsed = await parseRepository({
+      githubUrl: repository.githubUrl,
+      zipPath: repository.zipPath,
+      source: repository.source,
+    });
+
+    const predictions = await predictRisk(parsed);
+    const maintainabilityScore = await computeFuzzyScore(parsed.metrics);
+    const refactorPlan = await generateRefactorPlan(parsed.metrics);
+    const explanations = await explainPredictions(predictions);
+    const documentation = await generateDocumentation(parsed);
+
+    await AnalysisResult.findByIdAndUpdate(analysisId, {
+      status: "completed",
+      metrics: parsed.metrics,
+      riskModules: predictions,
+      maintainabilityScore,
+      refactorPlan,
+      explanations,
+      documentation,
+    });
+  } catch (error) {
+    await AnalysisResult.findByIdAndUpdate(analysisId, {
+      status: "failed",
+      error: error.message,
+    });
+  }
+};
+
+export const startAnalysis = async (req, res) => {
+  const repository = await Repository.findOne({
+    _id: req.params.repoId,
+    user: req.user._id,
+  });
+
+  if (!repository) {
+    res.status(404);
+    throw new Error("Repository not found");
+  }
+
+  const analysis = await AnalysisResult.create({
+    repository: repository._id,
+    user: req.user._id,
+    status: "pending",
+  });
+
+  runAnalysisPipeline(analysis._id, repository);
+
+  res.status(202).json(analysis);
+};
+
+export const getAnalysisById = async (req, res) => {
+  const analysis = await AnalysisResult.findOne({
+    _id: req.params.id,
+    user: req.user._id,
+  });
+
+  if (!analysis) {
+    res.status(404);
+    throw new Error("Analysis not found");
+  }
+
+  res.status(200).json(analysis);
+};
+
+export const getAnalysesByRepo = async (req, res) => {
+  const analyses = await AnalysisResult.find({
+    repository: req.params.repoId,
+    user: req.user._id,
+  }).sort({ createdAt: -1 });
+
+  res.status(200).json(analyses);
+};
