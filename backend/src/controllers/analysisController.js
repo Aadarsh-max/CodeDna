@@ -22,7 +22,7 @@ const runAnalysisPipeline = async (analysisId, repository) => {
     const predictions = await predictRisk(parsed);
     const maintainabilityScore = await computeFuzzyScore(parsed.metrics);
     const refactorPlan = await generateRefactorPlan(parsed.metrics);
-    const explanations = await explainPredictions(predictions);
+    const explanations = await explainPredictions(parsed.metrics);
     const documentation = await generateDocumentation(parsed);
 
     await AnalysisResult.findByIdAndUpdate(analysisId, {
