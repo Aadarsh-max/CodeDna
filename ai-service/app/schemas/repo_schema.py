@@ -17,6 +17,7 @@ class FileMetric(BaseModel):
     lines_of_code: int
     function_count: int
     import_count: int
+    imports: list[str] = []
     complexity_score: int
 
 

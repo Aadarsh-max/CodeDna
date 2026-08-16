@@ -60,6 +60,18 @@ def collect_source_files(root_dir: str) -> list[str]:
                 matched_files.append(os.path.join(current_dir, file_name))
     return matched_files
 
+def extract_import_targets(content: str, language: str) -> list[str]:
+    if language in ("javascript", "typescript"):
+        pattern = r'''(?:import\s+(?:[\w*{}\s,]+from\s+)?|require\(\s*)['"]([^'"]+)['"]'''
+        return re.findall(pattern, content)
+    if language == "python":
+        targets = []
+        for match in re.finditer(r"^\s*from\s+([.\w]+)\s+import", content, re.MULTILINE):
+            targets.append(match.group(1))
+        for match in re.finditer(r"^\s*import\s+([.\w]+)", content, re.MULTILINE):
+            targets.append(match.group(1))
+        return targets
+    return []
 
 def compute_file_metrics(file_path: str, root_dir: str) -> dict:
     extension = os.path.splitext(file_path)[1]
@@ -73,6 +85,7 @@ def compute_file_metrics(file_path: str, root_dir: str) -> dict:
 
     function_count = len(re.findall(FUNCTION_PATTERNS[language], content))
     import_count = len(re.findall(IMPORT_PATTERNS[language], content, re.MULTILINE))
+    import_targets = extract_import_targets(content, language)
 
     complexity_score = 1
     for pattern in COMPLEXITY_KEYWORDS:
@@ -86,6 +99,7 @@ def compute_file_metrics(file_path: str, root_dir: str) -> dict:
         "lines_of_code": len(code_lines),
         "function_count": function_count,
         "import_count": import_count,
+        "imports": import_targets,
         "complexity_score": complexity_score,
     }
 
