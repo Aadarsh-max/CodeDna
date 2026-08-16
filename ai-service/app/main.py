@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.utils.config import settings
-from app.routers import parse, graph, fuzzy, genetic, predict, explain
+from app.routers import parse, graph, fuzzy, genetic, predict, explain, llm
 
 app = FastAPI(title="CodeDNA AI Service")
 
@@ -19,6 +19,7 @@ app.include_router(fuzzy.router)
 app.include_router(genetic.router)
 app.include_router(predict.router)
 app.include_router(explain.router)
+app.include_router(llm.router)
 
 
 @app.get("/health")
