@@ -1,15 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from app.schemas.repo_schema import ParseRequest, ParseResponse
 from app.services.parser_service import parse_repository
+from app.utils.rate_limiter import limiter
 
 router = APIRouter()
 
 
 @router.post("/parse", response_model=ParseResponse)
-def parse(request: ParseRequest):
+@limiter.limit("15/minute")
+def parse(request: Request, payload: ParseRequest):
     result = parse_repository(
-        source=request.source,
-        github_url=request.github_url,
-        zip_path=request.zip_path,
+        source=payload.source,
+        github_url=payload.github_url,
+        zip_path=payload.zip_path,
     )
     return result

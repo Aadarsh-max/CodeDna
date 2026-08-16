@@ -5,6 +5,8 @@ import subprocess
 import tempfile
 import zipfile
 
+from app.utils.exceptions import RepositoryProcessingError, InvalidRequestError
+
 SOURCE_EXTENSIONS = {
     ".js": "javascript",
     ".jsx": "javascript",
@@ -35,18 +37,31 @@ COMPLEXITY_KEYWORDS = [
 
 def clone_repository(github_url: str) -> str:
     temp_dir = tempfile.mkdtemp(prefix="codedna_")
-    subprocess.run(
-        ["git", "clone", "--depth", "1", github_url, temp_dir],
-        check=True,
-        capture_output=True,
-    )
+    try:
+        subprocess.run(
+            ["git", "clone", "--depth", "1", github_url, temp_dir],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as error:
+        shutil.rmtree(temp_dir, ignore_errors=True)
+        detail = error.stderr.strip() if error.stderr else "invalid URL or repository not found"
+        raise RepositoryProcessingError(f"Failed to clone repository: {detail}")
     return temp_dir
 
 
 def extract_zip(zip_path: str) -> str:
+    if not os.path.exists(zip_path):
+        raise RepositoryProcessingError(f"ZIP file not found at {zip_path}")
+
     temp_dir = tempfile.mkdtemp(prefix="codedna_")
-    with zipfile.ZipFile(zip_path, "r") as zip_ref:
-        zip_ref.extractall(temp_dir)
+    try:
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(temp_dir)
+    except zipfile.BadZipFile:
+        shutil.rmtree(temp_dir, ignore_errors=True)
+        raise RepositoryProcessingError("Uploaded file is not a valid ZIP archive")
     return temp_dir
 
 
@@ -60,6 +75,7 @@ def collect_source_files(root_dir: str) -> list[str]:
                 matched_files.append(os.path.join(current_dir, file_name))
     return matched_files
 
+
 def extract_import_targets(content: str, language: str) -> list[str]:
     if language in ("javascript", "typescript"):
         pattern = r'''(?:import\s+(?:[\w*{}\s,]+from\s+)?|require\(\s*)['"]([^'"]+)['"]'''
@@ -72,6 +88,7 @@ def extract_import_targets(content: str, language: str) -> list[str]:
             targets.append(match.group(1))
         return targets
     return []
+
 
 def compute_file_metrics(file_path: str, root_dir: str) -> dict:
     extension = os.path.splitext(file_path)[1]
@@ -106,11 +123,15 @@ def compute_file_metrics(file_path: str, root_dir: str) -> dict:
 
 def parse_repository(source: str, github_url: str | None, zip_path: str | None) -> dict:
     if source == "github":
+        if not github_url:
+            raise InvalidRequestError("githubUrl is required when source is 'github'")
         root_dir = clone_repository(github_url)
     elif source == "zip":
+        if not zip_path:
+            raise InvalidRequestError("zipPath is required when source is 'zip'")
         root_dir = extract_zip(zip_path)
     else:
-        raise ValueError("Invalid source type")
+        raise InvalidRequestError("source must be either 'github' or 'zip'")
 
     try:
         source_files = collect_source_files(root_dir)
