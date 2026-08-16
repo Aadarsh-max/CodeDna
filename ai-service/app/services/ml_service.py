@@ -1,20 +1,29 @@
-def normalize(value: float, max_value: float) -> float:
-    return min(value / max_value, 1.0) if max_value else 0.0
+import os
+import joblib
+import numpy as np
+
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "bug_predictor.pkl")
+
+_model = None
+
+
+def get_model():
+    global _model
+    if _model is None:
+        _model = joblib.load(MODEL_PATH)
+    return _model
 
 
 def compute_bug_probability(metric: dict) -> float:
-    complexity_factor = normalize(metric["complexity_score"], 40)
-    size_factor = normalize(metric["lines_of_code"], 300)
-    coupling_factor = normalize(metric["import_count"], 20)
-    function_density = normalize(metric["function_count"], 30)
-
-    score = (
-        complexity_factor * 0.4
-        + size_factor * 0.25
-        + coupling_factor * 0.2
-        + function_density * 0.15
-    )
-    return round(score, 3)
+    model = get_model()
+    features = np.array([[
+        metric["complexity_score"],
+        metric["lines_of_code"],
+        metric["import_count"],
+        metric["function_count"],
+    ]])
+    probability = model.predict_proba(features)[0][1]
+    return round(float(probability), 3)
 
 
 def classify_risk(probability: float) -> str:
