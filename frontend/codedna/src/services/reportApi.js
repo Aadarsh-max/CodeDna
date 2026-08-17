@@ -5,4 +5,14 @@ const getReport = async (analysisId) => {
   return response.data;
 };
 
-export default { getReport };
+const createRefactorPlan = async (analysisId) => {
+  const response = await api.post(`/reports/${analysisId}/refactor-plan`);
+  return response.data;
+};
+
+const updateStepStatus = async (planId, stepId, status) => {
+  const response = await api.patch(`/reports/refactor-plan/${planId}/step/${stepId}`, { status });
+  return response.data;
+};
+
+export default { getReport, createRefactorPlan, updateStepStatus };
