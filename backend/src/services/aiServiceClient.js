@@ -35,3 +35,8 @@ export const generateDocumentation = async (payload) => {
   const response = await client.post("/llm", payload);
   return response.data;
 };
+
+export const getDependencyGraph = async (payload) => {
+  const response = await client.post("/graph", payload);
+  return response.data;
+};

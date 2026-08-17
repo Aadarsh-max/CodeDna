@@ -7,6 +7,7 @@ import {
   generateRefactorPlan,
   explainPredictions,
   generateDocumentation,
+  getDependencyGraph,
 } from "../services/aiServiceClient.js";
 
 const runAnalysisPipeline = async (analysisId, repository) => {
@@ -14,6 +15,12 @@ const runAnalysisPipeline = async (analysisId, repository) => {
     await AnalysisResult.findByIdAndUpdate(analysisId, { status: "running" });
 
     const parsed = await parseRepository({
+      githubUrl: repository.githubUrl,
+      zipPath: repository.zipPath,
+      source: repository.source,
+    });
+
+    const graph = await getDependencyGraph({
       githubUrl: repository.githubUrl,
       zipPath: repository.zipPath,
       source: repository.source,
@@ -33,6 +40,7 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       refactorPlan,
       explanations,
       documentation,
+      graph
     });
   } catch (error) {
     await AnalysisResult.findByIdAndUpdate(analysisId, {

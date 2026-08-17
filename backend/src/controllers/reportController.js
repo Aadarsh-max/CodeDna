@@ -23,6 +23,7 @@ export const getReport = async (req, res) => {
     explanations: analysis.explanations,
     documentation: analysis.documentation,
     refactorPlanDraft: analysis.refactorPlan,
+    graph: analysis.graph,
     refactorPlan,
   });
 };

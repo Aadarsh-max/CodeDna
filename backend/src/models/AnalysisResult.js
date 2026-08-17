@@ -23,6 +23,7 @@ const analysisResultSchema = new mongoose.Schema(
     refactorPlan: mongoose.Schema.Types.Mixed,
     explanations: mongoose.Schema.Types.Mixed,
     documentation: mongoose.Schema.Types.Mixed,
+    graph: mongoose.Schema.Types.Mixed,
     error: {
       type: String,
     },
