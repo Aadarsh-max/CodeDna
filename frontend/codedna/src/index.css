@@ -1,1 +1,50 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "codedna";
+  default: true;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #0B0E14;
+  --color-base-200: #12161F;
+  --color-base-300: #1A1F2B;
+  --color-base-content: #E8EAED;
+
+  --color-primary: #5EEAD4;
+  --color-primary-content: #06231F;
+
+  --color-secondary: #8B7FD6;
+  --color-secondary-content: #17122E;
+
+  --color-accent: #A594E8;
+  --color-accent-content: #17122E;
+
+  --color-neutral: #1A1F2B;
+  --color-neutral-content: #E8EAED;
+
+  --color-info: #5DADE2;
+  --color-info-content: #0B1F2E;
+
+  --color-success: #5EEAD4;
+  --color-success-content: #06231F;
+
+  --color-warning: #F2B84B;
+  --color-warning-content: #2E1F00;
+
+  --color-error: #F0554B;
+  --color-error-content: #2E0A06;
+}
+
+@theme {
+  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+}
