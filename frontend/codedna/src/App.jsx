@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import PageShell from "./components/layout/PageShell.jsx";
+import ProtectedRoute from "./components/common/ProtectedRoute.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import RepoImport from "./pages/RepoImport.jsx";
@@ -14,12 +15,12 @@ const App = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/" element={<PageShell><RepoImport /></PageShell>} />
-      <Route path="/dashboard/:analysisId" element={<PageShell><Dashboard /></PageShell>} />
-      <Route path="/architecture/:analysisId" element={<PageShell><ArchitectureView /></PageShell>} />
-      <Route path="/risks/:analysisId" element={<PageShell><RiskModules /></PageShell>} />
-      <Route path="/refactor/:analysisId" element={<PageShell><Refactoring /></PageShell>} />
-      <Route path="/report/:analysisId" element={<PageShell><Report /></PageShell>} />
+      <Route path="/" element={<ProtectedRoute><PageShell><RepoImport /></PageShell></ProtectedRoute>} />
+      <Route path="/dashboard/:analysisId" element={<ProtectedRoute><PageShell><Dashboard /></PageShell></ProtectedRoute>} />
+      <Route path="/architecture/:analysisId" element={<ProtectedRoute><PageShell><ArchitectureView /></PageShell></ProtectedRoute>} />
+      <Route path="/risks/:analysisId" element={<ProtectedRoute><PageShell><RiskModules /></PageShell></ProtectedRoute>} />
+      <Route path="/refactor/:analysisId" element={<ProtectedRoute><PageShell><Refactoring /></PageShell></ProtectedRoute>} />
+      <Route path="/report/:analysisId" element={<ProtectedRoute><PageShell><Report /></PageShell></ProtectedRoute>} />
     </Routes>
   );
 };
