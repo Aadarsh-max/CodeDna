@@ -22,6 +22,7 @@ export const getReport = async (req, res) => {
     maintainabilityScore: analysis.maintainabilityScore,
     explanations: analysis.explanations,
     documentation: analysis.documentation,
+    refactorPlanDraft: analysis.refactorPlan,
     refactorPlan,
   });
 };
