@@ -1,6 +1,7 @@
 import json
 import ollama
 from app.utils.config import settings
+from app.utils.logger import logger
 
 
 def build_repo_context(repo_name: str, metrics: list[dict]) -> str:
@@ -37,12 +38,20 @@ def generate_documentation(repo_name: str, metrics: list[dict]) -> dict:
 Codebase data:
 {context}"""
 
-    response = ollama.chat(
-        model=settings.ollama_model,
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    content = response["message"]["content"].strip()
+    try:
+        response = ollama.chat(
+            model=settings.ollama_model,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        content = response["message"]["content"].strip()
+    except Exception as error:
+        logger.error(f"LLM generation failed, returning fallback: {error}")
+        return {
+            "repo_name": repo_name,
+            "summary": "AI-generated documentation is temporarily unavailable for this analysis.",
+            "readme": "",
+            "insights": [],
+        }
 
     try:
         parsed = json.loads(content)

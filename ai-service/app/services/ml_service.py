@@ -1,8 +1,10 @@
 import os
 import joblib
-import numpy as np
+import pandas as pd
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "bug_predictor.pkl")
+
+FEATURE_NAMES = ["complexity_score", "lines_of_code", "import_count", "function_count"]
 
 _model = None
 
@@ -16,12 +18,12 @@ def get_model():
 
 def compute_bug_probability(metric: dict) -> float:
     model = get_model()
-    features = np.array([[
+    features = pd.DataFrame([[
         metric["complexity_score"],
         metric["lines_of_code"],
         metric["import_count"],
         metric["function_count"],
-    ]])
+    ]], columns=FEATURE_NAMES)
     probability = model.predict_proba(features)[0][1]
     return round(float(probability), 3)
 

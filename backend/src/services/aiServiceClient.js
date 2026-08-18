@@ -3,7 +3,7 @@ import { env } from "../config/env.js";
 
 const client = axios.create({
   baseURL: env.aiServiceUrl,
-  timeout: 120000,
+  timeout: 6000000,
 });
 
 export const parseRepository = async (payload) => {

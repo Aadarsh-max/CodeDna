@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import reportApi from "../services/reportApi.js";
-
+import useAnalysis from "../hooks/useAnalysis.js";
 const RISK_ORDER = { High: 0, Medium: 1, Low: 2 };
 
 const riskBadgeClass = (risk) => {
@@ -12,6 +12,11 @@ const riskBadgeClass = (risk) => {
 
 const RiskModules = () => {
   const { analysisId } = useParams();
+  const { setCurrentAnalysisId } = useAnalysis();
+
+  useEffect(() => {
+    setCurrentAnalysisId(analysisId);
+  }, [analysisId, setCurrentAnalysisId]);
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -37,7 +42,8 @@ const RiskModules = () => {
     let merged = (report.riskModules?.predictions || []).map((p) => ({
       ...p,
       top_reasons: explanationByPath[p.file_path]?.top_reasons || [],
-      feature_contributions: explanationByPath[p.file_path]?.feature_contributions || {},
+      feature_contributions:
+        explanationByPath[p.file_path]?.feature_contributions || {},
     }));
 
     if (filter !== "All") {
@@ -45,9 +51,12 @@ const RiskModules = () => {
     }
 
     merged.sort((a, b) => {
-      if (sortBy === "risk") return RISK_ORDER[a.risk_level] - RISK_ORDER[b.risk_level];
-      if (sortBy === "probability") return b.bug_probability - a.bug_probability;
-      if (sortBy === "debt") return b.technical_debt_score - a.technical_debt_score;
+      if (sortBy === "risk")
+        return RISK_ORDER[a.risk_level] - RISK_ORDER[b.risk_level];
+      if (sortBy === "probability")
+        return b.bug_probability - a.bug_probability;
+      if (sortBy === "debt")
+        return b.technical_debt_score - a.technical_debt_score;
       return 0;
     });
 
@@ -87,7 +96,11 @@ const RiskModules = () => {
           ))}
         </div>
 
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="select select-bordered select-sm w-fit">
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="select select-bordered select-sm w-fit"
+        >
           <option value="risk">Sort by risk level</option>
           <option value="probability">Sort by bug probability</option>
           <option value="debt">Sort by technical debt</option>
@@ -103,13 +116,26 @@ const RiskModules = () => {
 
       <div className="flex flex-col gap-2">
         {files.map((file) => (
-          <div key={file.file_path} className="collapse collapse-arrow bg-base-200 border border-base-300 rounded-box">
+          <div
+            key={file.file_path}
+            className="collapse collapse-arrow bg-base-200 border border-base-300 rounded-box"
+          >
             <input type="checkbox" />
             <div className="collapse-title grid grid-cols-2 md:grid-cols-[1fr_100px_120px_140px] gap-4 items-center pr-10">
-              <span className="font-mono text-sm truncate">{file.file_path}</span>
-              <span className={`badge ${riskBadgeClass(file.risk_level)} badge-sm w-fit`}>{file.risk_level}</span>
-              <span className="text-sm">{Math.round(file.bug_probability * 100)}%</span>
-              <span className="text-sm">{file.technical_debt_score.toFixed(1)}</span>
+              <span className="font-mono text-sm truncate">
+                {file.file_path}
+              </span>
+              <span
+                className={`badge ${riskBadgeClass(file.risk_level)} badge-sm w-fit`}
+              >
+                {file.risk_level}
+              </span>
+              <span className="text-sm">
+                {Math.round(file.bug_probability * 100)}%
+              </span>
+              <span className="text-sm">
+                {file.technical_debt_score.toFixed(1)}
+              </span>
             </div>
             <div className="collapse-content flex flex-col gap-4">
               {file.top_reasons.length > 0 ? (
@@ -122,31 +148,52 @@ const RiskModules = () => {
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm opacity-60">No significant risk factors identified.</p>
+                <p className="text-sm opacity-60">
+                  No significant risk factors identified.
+                </p>
               )}
 
               {Object.keys(file.feature_contributions).length > 0 && (
                 <div className="flex flex-col gap-2 pt-3 border-t border-base-300">
-                  <span className="text-xs opacity-50 font-medium">Feature contribution to risk</span>
-                  {Object.entries(file.feature_contributions).map(([feature, value]) => (
-                    <div key={feature} className="flex items-center gap-3 text-xs">
-                      <span className="w-32 opacity-70 font-mono">{feature}</span>
-                      <div className="flex-1 h-1.5 bg-base-300 rounded-full overflow-hidden">
-                        <div
-                          className={value >= 0 ? "h-full bg-error" : "h-full bg-primary"}
-                          style={{ width: `${Math.min(Math.abs(value) * 400, 100)}%` }}
-                        ></div>
+                  <span className="text-xs opacity-50 font-medium">
+                    Feature contribution to risk
+                  </span>
+                  {Object.entries(file.feature_contributions).map(
+                    ([feature, value]) => (
+                      <div
+                        key={feature}
+                        className="flex items-center gap-3 text-xs"
+                      >
+                        <span className="w-32 opacity-70 font-mono">
+                          {feature}
+                        </span>
+                        <div className="flex-1 h-1.5 bg-base-300 rounded-full overflow-hidden">
+                          <div
+                            className={
+                              value >= 0
+                                ? "h-full bg-error"
+                                : "h-full bg-primary"
+                            }
+                            style={{
+                              width: `${Math.min(Math.abs(value) * 400, 100)}%`,
+                            }}
+                          ></div>
+                        </div>
+                        <span className="w-12 text-right opacity-60">
+                          {value.toFixed(3)}
+                        </span>
                       </div>
-                      <span className="w-12 text-right opacity-60">{value.toFixed(3)}</span>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               )}
             </div>
           </div>
         ))}
 
-        {files.length === 0 && <p className="text-sm opacity-60">No files match this filter.</p>}
+        {files.length === 0 && (
+          <p className="text-sm opacity-60">No files match this filter.</p>
+        )}
       </div>
     </div>
   );

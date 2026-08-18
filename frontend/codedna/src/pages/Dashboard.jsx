@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import reportApi from "../services/reportApi.js";
+import useAnalysis from "../hooks/useAnalysis.js";
 
 const scoreColor = (value, invert = false) => {
   const effective = invert ? 100 - value : value;
@@ -11,6 +12,11 @@ const scoreColor = (value, invert = false) => {
 
 const Dashboard = () => {
   const { analysisId } = useParams();
+  const { setCurrentAnalysisId } = useAnalysis();
+
+  useEffect(() => {
+    setCurrentAnalysisId(analysisId);
+  }, [analysisId, setCurrentAnalysisId]);
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -35,10 +41,21 @@ const Dashboard = () => {
     return <p className="text-error">{error || "Report not found"}</p>;
   }
 
-  const { repository, metrics, riskModules, maintainabilityScore, documentation, refactorPlanDraft } = report;
+  const {
+    repository,
+    metrics,
+    riskModules,
+    maintainabilityScore,
+    documentation,
+    refactorPlanDraft,
+  } = report;
 
-  const maintainability = Math.round(maintainabilityScore?.average_maintainability ?? 0);
-  const bugProbability = Math.round((riskModules?.average_bug_probability ?? 0) * 100);
+  const maintainability = Math.round(
+    maintainabilityScore?.average_maintainability ?? 0,
+  );
+  const bugProbability = Math.round(
+    (riskModules?.average_bug_probability ?? 0) * 100,
+  );
   const highRiskCount = riskModules?.high_risk_file_count ?? 0;
   const totalFiles = metrics?.length ?? 0;
   const refactorStepCount = refactorPlanDraft?.length ?? 0;
@@ -46,9 +63,13 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold">{repository?.name}</h1>
+        <h1 className="font-display text-2xl font-semibold">
+          {repository?.name}
+        </h1>
         <div className="flex gap-2 items-center text-sm opacity-60 mt-1">
-          <span className="badge badge-sm badge-neutral">{repository?.source}</span>
+          <span className="badge badge-sm badge-neutral">
+            {repository?.source}
+          </span>
           {repository?.language && <span>{repository.language}</span>}
           <span>{totalFiles} files analyzed</span>
         </div>
@@ -71,37 +92,60 @@ const Dashboard = () => {
         </div>
 
         <div className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col items-center justify-center gap-2">
-          <div className={`radial-progress ${scoreColor(maintainability)}`} style={{ "--value": maintainability, "--size": "5rem" }} role="progressbar">
+          <div
+            className={`radial-progress ${scoreColor(maintainability)}`}
+            style={{ "--value": maintainability, "--size": "5rem" }}
+            role="progressbar"
+          >
             {maintainability}
           </div>
           <span className="text-sm opacity-60">Maintainability</span>
         </div>
 
         <div className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col items-center justify-center gap-2">
-          <div className={`radial-progress ${scoreColor(bugProbability, true)}`} style={{ "--value": bugProbability, "--size": "5rem" }} role="progressbar">
+          <div
+            className={`radial-progress ${scoreColor(bugProbability, true)}`}
+            style={{ "--value": bugProbability, "--size": "5rem" }}
+            role="progressbar"
+          >
             {bugProbability}%
           </div>
           <span className="text-sm opacity-60">Avg Bug Risk</span>
         </div>
 
         <div className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col items-center justify-center gap-2">
-          <span className="text-4xl font-display font-semibold text-error">{highRiskCount}</span>
+          <span className="text-4xl font-display font-semibold text-error">
+            {highRiskCount}
+          </span>
           <span className="text-sm opacity-60">High Risk Files</span>
         </div>
 
-        <Link to={`/architecture/${analysisId}`} className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col justify-between hover:border-primary transition-colors">
+        <Link
+          to={`/architecture/${analysisId}`}
+          className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col justify-between hover:border-primary transition-colors"
+        >
           <span className="font-display font-semibold">Architecture</span>
           <span className="text-sm opacity-60">View dependency graph →</span>
         </Link>
 
-        <Link to={`/risks/${analysisId}`} className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col justify-between hover:border-primary transition-colors">
+        <Link
+          to={`/risks/${analysisId}`}
+          className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col justify-between hover:border-primary transition-colors"
+        >
           <span className="font-display font-semibold">Risk Modules</span>
-          <span className="text-sm opacity-60">{highRiskCount} files flagged →</span>
+          <span className="text-sm opacity-60">
+            {highRiskCount} files flagged →
+          </span>
         </Link>
 
-        <Link to={`/refactor/${analysisId}`} className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col justify-between hover:border-primary transition-colors">
+        <Link
+          to={`/refactor/${analysisId}`}
+          className="bg-base-200 border border-base-300 rounded-box p-6 flex flex-col justify-between hover:border-primary transition-colors"
+        >
           <span className="font-display font-semibold">Refactor Plan</span>
-          <span className="text-sm opacity-60">{refactorStepCount} suggested steps →</span>
+          <span className="text-sm opacity-60">
+            {refactorStepCount} suggested steps →
+          </span>
         </Link>
       </div>
     </div>

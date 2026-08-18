@@ -10,4 +10,9 @@ const getAnalysis = async (analysisId) => {
   return response.data;
 };
 
-export default { startAnalysis, getAnalysis };
+const getAnalysesForRepo = async (repoId) => {
+  const response = await api.get(`/analysis/repo/${repoId}`);
+  return response.data;
+};
+
+export default { startAnalysis, getAnalysis, getAnalysesForRepo };

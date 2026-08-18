@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import ReactFlow, { Background, Controls, Handle, Position } from "reactflow";
+import { motion } from "framer-motion";
 import "reactflow/dist/style.css";
 
 const ANGLE_STEP = 0.6;
@@ -12,14 +13,17 @@ const HelixNode = ({ data }) => {
     data.risk === "High" ? "bg-error" : data.risk === "Medium" ? "bg-warning" : "bg-primary";
 
   return (
-    <div
+    <motion.div
       title={`${data.label} — ${data.risk} risk (${Math.round(data.bugProbability * 100)}%)`}
       className={`rounded-full ${colorClass}`}
-      style={{ width: data.size, height: data.size, opacity: data.depth }}
+      style={{ width: data.size, height: data.size }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: data.depth }}
+      transition={{ delay: Math.min(data.index, 40) * 0.012, duration: 0.3 }}
     >
       <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
       <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
-    </div>
+    </motion.div>
   );
 };
 
@@ -51,6 +55,7 @@ const buildLayout = (graphNodes, predictions) => {
         bugProbability,
         size: 14 + Math.min(node.complexity_score || 0, 30) / 2,
         depth: 0.4 + depth * 0.6,
+        index: i,
       },
       draggable: false,
     };
@@ -84,15 +89,7 @@ const ArchitectureGraph = ({ graph, predictions }) => {
 
   return (
     <div className="h-[70vh] bg-base-200 border border-base-300 rounded-box overflow-hidden">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        fitView
-        proOptions={{ hideAttribution: true }}
-        nodesConnectable={false}
-        elementsSelectable={false}
-      >
+      <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView proOptions={{ hideAttribution: true }} nodesConnectable={false} elementsSelectable={false}>
         <Background color="#1A1F2B" gap={24} />
         <Controls />
       </ReactFlow>

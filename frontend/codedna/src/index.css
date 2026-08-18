@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
 
 @plugin "daisyui";
 
@@ -37,6 +37,13 @@
 
   --color-error: #F0554B;
   --color-error-content: #2E0A06;
+
+  --radius-box: 1rem;
+  --radius-field: 0.625rem;
+  --radius-selector: 0.5rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
 }
 
 @theme {
@@ -47,4 +54,10 @@
 
 body {
   font-family: var(--font-sans);
+  background-color: #0B0E14;
+  background-image:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(94, 234, 212, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(139, 127, 214, 0.08), transparent 60%);
+  background-attachment: fixed;
+  min-height: 100vh;
 }

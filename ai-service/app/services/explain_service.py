@@ -1,8 +1,6 @@
-import numpy as np
+import pandas as pd
 import shap
-from app.services.ml_service import compute_bug_probability
-
-FEATURE_NAMES = ["complexity_score", "lines_of_code", "import_count", "function_count"]
+from app.services.ml_service import get_model, FEATURE_NAMES
 
 FEATURE_LABELS = {
     "complexity_score": "High Cyclomatic Complexity",
@@ -12,42 +10,36 @@ FEATURE_LABELS = {
 }
 
 
-def metrics_to_array(metrics: list[dict]) -> np.ndarray:
-    return np.array([
-        [m["complexity_score"], m["lines_of_code"], m["import_count"], m["function_count"]]
-        for m in metrics
-    ], dtype=float)
-
-
-def predict_from_array(data: np.ndarray) -> np.ndarray:
-    predictions = []
-    for row in data:
-        metric = {
-            "complexity_score": row[0],
-            "lines_of_code": row[1],
-            "import_count": row[2],
-            "function_count": row[3],
-        }
-        predictions.append(compute_bug_probability(metric))
-    return np.array(predictions)
+def extract_positive_class_values(shap_values):
+    if isinstance(shap_values, list):
+        return shap_values[1]
+    if shap_values.ndim == 3:
+        return shap_values[:, :, 1]
+    return shap_values
 
 
 def explain_repository(metrics: list[dict]) -> list[dict]:
-    data = metrics_to_array(metrics)
+    model = get_model()
+    data = pd.DataFrame(
+        [[m["complexity_score"], m["lines_of_code"], m["import_count"], m["function_count"]] for m in metrics],
+        columns=FEATURE_NAMES,
+    )
 
-    background = data if len(data) <= 20 else shap.sample(data, 20)
-    explainer = shap.Explainer(predict_from_array, background, feature_names=FEATURE_NAMES)
-    shap_values = explainer(data)
+    explainer = shap.TreeExplainer(model)
+    raw_shap_values = explainer.shap_values(data)
+    positive_class_values = extract_positive_class_values(raw_shap_values)
+
+    probabilities = model.predict_proba(data)[:, 1]
 
     explanations = []
     for i, m in enumerate(metrics):
-        values = shap_values.values[i]
+        values = positive_class_values[i]
         ranked = sorted(zip(FEATURE_NAMES, values), key=lambda x: abs(x[1]), reverse=True)
         top_reasons = [FEATURE_LABELS[name] for name, val in ranked[:2] if val > 0]
 
         explanations.append({
             "file_path": m["file_path"],
-            "bug_probability": round(float(compute_bug_probability(m)), 3),
+            "bug_probability": round(float(probabilities[i]), 3),
             "top_reasons": top_reasons if top_reasons else ["No significant risk factors"],
             "feature_contributions": {name: round(float(val), 4) for name, val in zip(FEATURE_NAMES, values)},
         })

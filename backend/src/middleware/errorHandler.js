@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import { logger } from "../utils/logger.js";
 
 export const notFound = (req, res, next) => {
   const error = new Error(`Route not found - ${req.originalUrl}`);
@@ -7,7 +8,7 @@ export const notFound = (req, res, next) => {
 };
 
 export const errorHandler = (err, req, res, next) => {
-  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let statusCode = err.statusCode || (res.statusCode === 200 ? 500 : res.statusCode);
   let message = err.message;
 
   if (err.name === "CastError") {
@@ -24,6 +25,8 @@ export const errorHandler = (err, req, res, next) => {
     statusCode = 400;
     message = Object.values(err.errors).map((val) => val.message).join(", ");
   }
+
+  logger.error(`${req.method} ${req.originalUrl} - ${statusCode} - ${err.stack}`);
 
   res.status(statusCode).json({
     success: false,
