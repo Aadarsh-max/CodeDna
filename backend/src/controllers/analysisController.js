@@ -30,17 +30,25 @@ const runAnalysisPipeline = async (analysisId, repository) => {
     const maintainabilityScore = await computeFuzzyScore(parsed.metrics);
     const refactorPlan = await generateRefactorPlan(parsed.metrics);
     const explanations = await explainPredictions(parsed.metrics);
-    const documentation = await generateDocumentation(parsed);
+
+    const documentation = await generateDocumentation({
+      repoName: parsed.repo_name,
+      metrics: parsed.metrics,
+      averageBugProbability: predictions.average_bug_probability,
+      highRiskFileCount: predictions.high_risk_file_count,
+      averageMaintainability: maintainabilityScore.average_maintainability,
+      topRefactorActions: refactorPlan.slice(0, 5).map((step) => `${step.action} on ${step.target}`),
+    });
 
     await AnalysisResult.findByIdAndUpdate(analysisId, {
       status: "completed",
       metrics: parsed.metrics,
+      graph,
       riskModules: predictions,
       maintainabilityScore,
       refactorPlan,
       explanations,
       documentation,
-      graph
     });
   } catch (error) {
     await AnalysisResult.findByIdAndUpdate(analysisId, {
