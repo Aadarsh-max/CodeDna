@@ -86,6 +86,14 @@ body::before {
   box-shadow: inset 4px 4px 10px rgba(58, 48, 26, 0.14), inset -4px -4px 10px rgba(255, 255, 255, 0.7);
 }
 
+.shadow-clay-edge-b {
+  box-shadow: 0 8px 20px rgba(58, 48, 26, 0.10);
+}
+
+.shadow-clay-edge-r {
+  box-shadow: 8px 0 20px rgba(58, 48, 26, 0.08);
+}
+
 button:not(:disabled),
 [role="button"]:not(:disabled),
 .btn:not(:disabled),

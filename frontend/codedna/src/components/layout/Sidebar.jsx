@@ -15,15 +15,15 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 min-h-full bg-base-200/60 backdrop-blur-sm border-r border-base-300/80 p-4">
-      <ul className="flex flex-col gap-1">
+    <aside className="w-[78vw] max-w-64 lg:w-64 min-h-full bg-linear-to-b from-base-100 to-base-200 shadow-clay-edge-r rounded-r-[1.5rem] lg:rounded-none p-4 flex flex-col gap-1">
+      <ul className="flex flex-col gap-1.5">
         {links.map(({ to, label, icon: Icon, requiresAnalysis }) => {
           const disabled = requiresAnalysis && !currentAnalysisId;
 
           if (disabled) {
             return (
               <li key={label}>
-                <span className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border-l-2 border-transparent text-base-content/30 cursor-not-allowed">
+                <span className="flex items-center gap-3 px-3.5 py-2.5 rounded-field text-sm font-medium text-base-content/25 shadow-clay-pressed opacity-60 cursor-not-allowed">
                   <Icon size={17} strokeWidth={2} />
                   {label}
                 </span>
@@ -36,10 +36,10 @@ const Sidebar = () => {
               <NavLink
                 to={to}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border-l-2 ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-field text-sm font-medium transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? "bg-primary/10 border-primary text-primary"
-                      : "border-transparent text-base-content/70 hover:text-base-content hover:bg-base-300/40"
+                      ? "bg-base-100 shadow-clay-pressed text-primary"
+                      : "text-base-content/65 hover:text-base-content hover:bg-base-100 hover:shadow-clay-sm"
                   }`
                 }
               >
