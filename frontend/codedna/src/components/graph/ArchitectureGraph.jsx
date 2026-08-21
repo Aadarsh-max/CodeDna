@@ -15,7 +15,7 @@ const HelixNode = ({ data }) => {
 
   return (
     <motion.div
-      className={`rounded-full ${colorClass}`}
+      className={`rounded-full ${colorClass} shadow-clay-sm`}
       style={{ width: data.size, height: data.size }}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: data.depth }}
@@ -75,7 +75,7 @@ const buildEdges = (graphEdges, includedIds) => {
       source: e.source,
       target: e.target,
       type: "smoothstep",
-      style: { stroke: "#8B7FD6", strokeWidth: 1, opacity: 0.35 },
+      style: { stroke: "#6D5FC4", strokeWidth: 1, opacity: 0.4 },
     }));
 };
 
@@ -100,28 +100,28 @@ const ArchitectureGraph = ({ graph, predictions }) => {
   }, []);
 
   if (nodes.length === 0) {
-    return <p className="text-sm opacity-60">No graph data available.</p>;
+    return <p className="text-sm text-base-content/55">No graph data available.</p>;
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="h-9 flex items-center px-1">
+      <div className="min-h-9 flex items-center px-1">
         {hovered ? (
-          <div className="flex items-center gap-3 text-xs font-mono">
-            <span className="opacity-90">{hovered.label}</span>
-            <span className="opacity-50">·</span>
-            <span className="opacity-70">{hovered.risk} risk</span>
-            <span className="opacity-70">{Math.round(hovered.bugProbability * 100)}% bug probability</span>
-            <span className="opacity-70">complexity {hovered.complexity}</span>
+          <div className="flex items-center gap-3 text-xs font-mono flex-wrap">
+            <span className="text-base-content/85">{hovered.label}</span>
+            <span className="text-base-content/30">·</span>
+            <span className="text-base-content/60">{hovered.risk} risk</span>
+            <span className="text-base-content/60">{Math.round(hovered.bugProbability * 100)}% bug probability</span>
+            <span className="text-base-content/60">complexity {hovered.complexity}</span>
           </div>
         ) : (
-          <span className="text-xs opacity-40">
+          <span className="text-xs text-base-content/40">
             Hover a node for details · sorted by complexity, most notable files first · scroll to explore the full strand
           </span>
         )}
       </div>
 
-      <div className="h-[68vh] bg-base-200 border border-base-300 rounded-box overflow-hidden">
+      <div className="h-[55vh] sm:h-[68vh] bg-base-200 shadow-clay-pressed rounded-[1.5rem] overflow-hidden">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -136,7 +136,7 @@ const ArchitectureGraph = ({ graph, predictions }) => {
           onNodeMouseEnter={handleNodeMouseEnter}
           onNodeMouseLeave={handleNodeMouseLeave}
         >
-          <Background color="#1A1F2B" gap={24} />
+          <Background color="#C9C4B2" gap={24} />
           <Controls />
         </ReactFlow>
       </div>

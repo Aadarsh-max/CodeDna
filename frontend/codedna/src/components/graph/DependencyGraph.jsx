@@ -2,9 +2,9 @@ import { useMemo, useState, useCallback } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 
 const riskColor = {
-  High: "#F0554B",
-  Medium: "#F2B84B",
-  Low: "#5EEAD4",
+  High: "#C6493D",
+  Medium: "#C98A2E",
+  Low: "#0E8C7E",
 };
 
 const MAX_NODES = 150;
@@ -54,8 +54,8 @@ const stylesheet = [
     selector: "edge",
     style: {
       width: 1,
-      "line-color": "#8B7FD6",
-      "line-opacity": 0.3,
+      "line-color": "#6D5FC4",
+      "line-opacity": 0.4,
       "curve-style": "bezier",
       "target-arrow-shape": "none",
     },
@@ -76,25 +76,25 @@ const DependencyGraph = ({ graph, predictions }) => {
   }, []);
 
   if (elements.length === 0) {
-    return <p className="text-sm opacity-60">No graph data available.</p>;
+    return <p className="text-sm text-base-content/55">No graph data available.</p>;
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="h-9 flex items-center px-1">
+      <div className="min-h-9 flex items-center px-1">
         {hovered ? (
-          <div className="flex items-center gap-3 text-xs font-mono">
-            <span className="opacity-90">{hovered.id}</span>
-            <span className="opacity-50">·</span>
-            <span className="opacity-70">{hovered.risk} risk</span>
-            <span className="opacity-70">{Math.round(hovered.bugProbability * 100)}% bug probability</span>
+          <div className="flex items-center gap-3 text-xs font-mono flex-wrap">
+            <span className="text-base-content/85">{hovered.id}</span>
+            <span className="text-base-content/30">·</span>
+            <span className="text-base-content/60">{hovered.risk} risk</span>
+            <span className="text-base-content/60">{Math.round(hovered.bugProbability * 100)}% bug probability</span>
           </div>
         ) : (
-          <span className="text-xs opacity-40">Hover a node to see file details</span>
+          <span className="text-xs text-base-content/40">Hover a node to see file details</span>
         )}
       </div>
 
-      <div className="h-[68vh] bg-base-200 border border-base-300 rounded-box overflow-hidden">
+      <div className="h-[55vh] sm:h-[68vh] bg-base-200 shadow-clay-pressed rounded-[1.5rem] overflow-hidden">
         <CytoscapeComponent
           elements={elements}
           stylesheet={stylesheet}

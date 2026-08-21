@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 
 const riskColor = {
-  High: "#F0554B",
-  Medium: "#F2B84B",
-  Low: "#5EEAD4",
+  High: "#C6493D",
+  Medium: "#C98A2E",
+  Low: "#0E8C7E",
 };
 
 const getGroup = (filePath) => {
@@ -63,8 +63,8 @@ const stylesheet = [
   {
     selector: "node",
     style: {
-      "background-color": "#12161F",
-      "border-width": 2,
+      "background-color": "#F1EFE8",
+      "border-width": 2.5,
       "border-color": (ele) => riskColor[ele.data("risk")] || riskColor.Low,
       shape: "round-rectangle",
       width: 130,
@@ -76,15 +76,15 @@ const stylesheet = [
       "font-family": "IBM Plex Mono, monospace",
       "font-size": 11,
       "font-weight": 600,
-      color: "#E8EAED",
+      color: "#1B221E",
     },
   },
   {
     selector: "edge",
     style: {
       width: 1.5,
-      "line-color": "#8B7FD6",
-      "target-arrow-color": "#8B7FD6",
+      "line-color": "#6D5FC4",
+      "target-arrow-color": "#6D5FC4",
       "target-arrow-shape": "triangle",
       "arrow-scale": 1,
       "curve-style": "taxi",
@@ -93,8 +93,8 @@ const stylesheet = [
       label: "data(label)",
       "font-family": "IBM Plex Mono, monospace",
       "font-size": 9,
-      color: "#8B7FD6",
-      "text-background-color": "#0B0E14",
+      color: "#6D5FC4",
+      "text-background-color": "#E9E6DC",
       "text-background-opacity": 1,
       "text-background-padding": 2,
     },
@@ -108,11 +108,11 @@ const RelationalDiagram = ({ graph, predictions }) => {
   }, [graph, predictions]);
 
   if (elements.length === 0) {
-    return <p className="text-sm opacity-60">No graph data available.</p>;
+    return <p className="text-sm text-base-content/55">No graph data available.</p>;
   }
 
   return (
-    <div className="h-[60vh] bg-base-200 border border-base-300 rounded-box overflow-hidden">
+    <div className="h-[55vh] sm:h-[68vh] bg-base-200 shadow-clay-pressed rounded-[1.5rem] overflow-hidden">
       <CytoscapeComponent
         elements={elements}
         stylesheet={stylesheet}

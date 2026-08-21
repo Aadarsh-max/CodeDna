@@ -12,6 +12,12 @@ const CAPTIONS = {
   dna: "The same dependency data, arranged as a double helix.",
 };
 
+const TABS = [
+  { key: "dependency", label: "Dependency Graph" },
+  { key: "relational", label: "Relational Diagram" },
+  { key: "dna", label: "DNA View" },
+];
+
 const ArchitectureView = () => {
   const { analysisId } = useParams();
   const { setCurrentAnalysisId } = useAnalysis();
@@ -41,38 +47,50 @@ const ArchitectureView = () => {
   }
 
   if (error || !report) {
-    return <p className="text-error">{error || "Report not found"}</p>;
+    return (
+      <p className="text-error text-sm bg-error/10 border border-error/20 rounded-field px-4 py-3 inline-block">
+        {error || "Report not found"}
+      </p>
+    );
   }
 
   const nodeCount = report.graph?.nodes?.length ?? 0;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 sm:gap-5">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-2xl font-semibold">Architecture</h1>
-          <p className="text-sm opacity-60">
+          <h1 className="font-display text-xl sm:text-2xl font-semibold text-base-content">Architecture</h1>
+          <p className="text-xs sm:text-sm text-base-content/55 mt-1">
             {nodeCount} files, {report.graph?.edges?.length ?? 0} dependency connections
             {nodeCount > 150 && view === "dependency" && " — showing first 150 for performance"}
           </p>
         </div>
 
-        <div role="tablist" className="tabs tabs-boxed w-fit">
-          <button role="tab" onClick={() => setView("dependency")} className={`tab ${view === "dependency" ? "tab-active" : ""}`}>
-            Dependency Graph
-          </button>
-          <button role="tab" onClick={() => setView("relational")} className={`tab ${view === "relational" ? "tab-active" : ""}`}>
-            Relational Diagram
-          </button>
-          <button role="tab" onClick={() => setView("dna")} className={`tab ${view === "dna" ? "tab-active" : ""}`}>
-            DNA View
-          </button>
+        <div
+          role="tablist"
+          className="flex gap-1 p-1 rounded-field bg-base-200 shadow-clay-pressed w-full sm:w-fit overflow-x-auto"
+        >
+          {TABS.map(({ key, label }) => (
+            <button
+              key={key}
+              role="tab"
+              onClick={() => setView(key)}
+              className={`px-3 sm:px-4 py-1.5 rounded-field text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                view === key
+                  ? "bg-base-100 shadow-clay-sm text-primary"
+                  : "text-base-content/55 hover:text-base-content"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <p className="text-sm opacity-60 max-w-2xl">{CAPTIONS[view]}</p>
+      <p className="text-sm text-base-content/60 max-w-2xl">{CAPTIONS[view]}</p>
 
-      <div className="flex gap-4 text-xs">
+      <div className="flex gap-4 flex-wrap text-xs text-base-content/65">
         <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-primary"></span> Low risk</span>
         <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-warning"></span> Medium risk</span>
         <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-error"></span> High risk</span>
