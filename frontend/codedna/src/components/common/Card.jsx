@@ -1,9 +1,9 @@
-const Card = ({ children, className = "", glow = false }) => {
+const Card = ({ children, className = "", glow = false, pressed = false }) => {
   return (
     <div
-      className={`relative rounded-box border border-base-300/80 bg-linear-to-b from-base-200 to-base-200/60 backdrop-blur-sm shadow-lg shadow-black/20 ${
-        glow ? "ring-1 ring-primary/20" : ""
-      } ${className}`}
+      className={`relative rounded-[1.75rem] bg-linear-to-br from-base-100 to-base-200 ${
+        pressed ? "shadow-clay-pressed" : "shadow-clay"
+      } ${glow ? "ring-2 ring-primary/25" : ""} ${className}`}
     >
       {children}
     </div>

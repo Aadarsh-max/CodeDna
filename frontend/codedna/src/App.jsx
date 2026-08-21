@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import PageShell from "./components/layout/PageShell.jsx";
 import ProtectedRoute from "./components/common/ProtectedRoute.jsx";
+import ParticleField from "./components/common/ParticleField.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import RepoImport from "./pages/RepoImport.jsx";
@@ -21,18 +22,23 @@ const App = () => {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-        <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
-        <Route path="/" element={<ProtectedRoute><PageShell><PageTransition><RepoImport /></PageTransition></PageShell></ProtectedRoute>} />
-        <Route path="/dashboard/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><Dashboard /></PageTransition></PageShell></ProtectedRoute>} />
-        <Route path="/architecture/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><ArchitectureView /></PageTransition></PageShell></ProtectedRoute>} />
-        <Route path="/risks/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><RiskModules /></PageTransition></PageShell></ProtectedRoute>} />
-        <Route path="/refactor/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><Refactoring /></PageTransition></PageShell></ProtectedRoute>} />
-        <Route path="/report/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><Report /></PageTransition></PageShell></ProtectedRoute>} />
-      </Routes>
-    </AnimatePresence>
+    <>
+      <ParticleField />
+      <div className="relative z-10">
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+            <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
+            <Route path="/" element={<ProtectedRoute><PageShell><PageTransition><RepoImport /></PageTransition></PageShell></ProtectedRoute>} />
+            <Route path="/dashboard/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><Dashboard /></PageTransition></PageShell></ProtectedRoute>} />
+            <Route path="/architecture/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><ArchitectureView /></PageTransition></PageShell></ProtectedRoute>} />
+            <Route path="/risks/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><RiskModules /></PageTransition></PageShell></ProtectedRoute>} />
+            <Route path="/refactor/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><Refactoring /></PageTransition></PageShell></ProtectedRoute>} />
+            <Route path="/report/:analysisId" element={<ProtectedRoute><PageShell><PageTransition><Report /></PageTransition></PageShell></ProtectedRoute>} />
+          </Routes>
+        </AnimatePresence>
+      </div>
+    </>
   );
 };
 

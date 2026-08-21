@@ -6,41 +6,41 @@
 @plugin "daisyui/theme" {
   name: "codedna";
   default: true;
-  prefersdark: true;
-  color-scheme: dark;
+  prefersdark: false;
+  color-scheme: light;
 
-  --color-base-100: #0B0E14;
-  --color-base-200: #12161F;
-  --color-base-300: #1A1F2B;
-  --color-base-content: #E8EAED;
+  --color-base-100: #F1EFE8;
+  --color-base-200: #E9E6DC;
+  --color-base-300: #DEDACC;
+  --color-base-content: #1B221E;
 
-  --color-primary: #5EEAD4;
-  --color-primary-content: #06231F;
+  --color-primary: #0E8C7E;
+  --color-primary-content: #F1EFE8;
 
-  --color-secondary: #8B7FD6;
-  --color-secondary-content: #17122E;
+  --color-secondary: #6D5FC4;
+  --color-secondary-content: #F5F3EE;
 
-  --color-accent: #A594E8;
-  --color-accent-content: #17122E;
+  --color-accent: #8B7FD6;
+  --color-accent-content: #211A3D;
 
-  --color-neutral: #1A1F2B;
-  --color-neutral-content: #E8EAED;
+  --color-neutral: #DEDACC;
+  --color-neutral-content: #1B221E;
 
-  --color-info: #5DADE2;
-  --color-info-content: #0B1F2E;
+  --color-info: #3B82A6;
+  --color-info-content: #F1EFE8;
 
-  --color-success: #5EEAD4;
-  --color-success-content: #06231F;
+  --color-success: #0E8C7E;
+  --color-success-content: #F1EFE8;
 
-  --color-warning: #F2B84B;
+  --color-warning: #C98A2E;
   --color-warning-content: #2E1F00;
 
-  --color-error: #F0554B;
-  --color-error-content: #2E0A06;
+  --color-error: #C6493D;
+  --color-error-content: #FDEEEC;
 
-  --radius-box: 1rem;
-  --radius-field: 0.625rem;
-  --radius-selector: 0.5rem;
+  --radius-box: 1.75rem;
+  --radius-field: 1rem;
+  --radius-selector: 0.75rem;
   --border: 1px;
   --depth: 1;
   --noise: 0;
@@ -54,10 +54,59 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: #0B0E14;
+  background-color: #F1EFE8;
   background-image:
-    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(94, 234, 212, 0.10), transparent 60%),
-    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(139, 127, 214, 0.08), transparent 60%);
+    radial-gradient(ellipse 900px 500px at 10% -10%, rgba(14, 140, 126, 0.07), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 0%, rgba(109, 95, 196, 0.06), transparent 60%);
   background-attachment: fixed;
   min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.shadow-clay {
+  box-shadow: 9px 9px 20px rgba(58, 48, 26, 0.14), -9px -9px 20px rgba(255, 255, 255, 0.85);
+}
+
+.shadow-clay-sm {
+  box-shadow: 5px 5px 12px rgba(58, 48, 26, 0.12), -5px -5px 12px rgba(255, 255, 255, 0.8);
+}
+
+.shadow-clay-pressed {
+  box-shadow: inset 4px 4px 10px rgba(58, 48, 26, 0.14), inset -4px -4px 10px rgba(255, 255, 255, 0.7);
+}
+
+button:not(:disabled),
+[role="button"]:not(:disabled),
+.btn:not(:disabled),
+a,
+input[type="checkbox"],
+input[type="radio"],
+select {
+  cursor: pointer;
+}
+
+button:disabled,
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
