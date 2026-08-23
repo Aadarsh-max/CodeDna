@@ -45,7 +45,46 @@ def compute_technical_debt(metric: dict, bug_probability: float) -> float:
     return round(debt, 2)
 
 
+def compute_confidence(probability: float) -> float:
+    return round(abs(probability - 0.5) * 2, 3)
+
+
 def predict_repository_risk(repo_name: str, metrics: list[dict]) -> dict:
+    predictions = []
+    total_probability = 0
+    total_confidence = 0
+    high_risk_count = 0
+
+    for metric in metrics:
+        bug_probability = compute_bug_probability(metric)
+        risk_level = classify_risk(bug_probability)
+        technical_debt_score = compute_technical_debt(metric, bug_probability)
+        confidence = compute_confidence(bug_probability)
+
+        if risk_level == "High":
+            high_risk_count += 1
+
+        total_probability += bug_probability
+        total_confidence += confidence
+
+        predictions.append({
+            "file_path": metric["file_path"],
+            "bug_probability": bug_probability,
+            "risk_level": risk_level,
+            "technical_debt_score": technical_debt_score,
+            "confidence": confidence,
+        })
+
+    average_bug_probability = round(total_probability / len(metrics), 3) if metrics else 0
+    average_confidence = round(total_confidence / len(metrics), 3) if metrics else 0
+
+    return {
+        "repo_name": repo_name,
+        "average_bug_probability": average_bug_probability,
+        "high_risk_file_count": high_risk_count,
+        "average_confidence": average_confidence,
+        "predictions": predictions,
+    }
     predictions = []
     total_probability = 0
     high_risk_count = 0

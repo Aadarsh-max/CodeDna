@@ -82,12 +82,19 @@ const RiskModules = () => {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="font-display text-xl sm:text-2xl font-semibold text-base-content">Risk Modules</h1>
-        <p className="text-xs sm:text-sm text-base-content/55">{files.length} files shown</p>
+        <h1 className="font-display text-xl sm:text-2xl font-semibold text-base-content">
+          Risk Modules
+        </h1>
+        <p className="text-xs sm:text-sm text-base-content/55">
+          {files.length} files shown
+        </p>
       </div>
 
       <div className="flex flex-wrap gap-3 items-center">
-        <div role="tablist" className="flex gap-1 p-1 rounded-field bg-base-200 shadow-clay-pressed w-fit overflow-x-auto">
+        <div
+          role="tablist"
+          className="flex gap-1 p-1 rounded-field bg-base-200 shadow-clay-pressed w-fit overflow-x-auto"
+        >
           {["All", "High", "Medium", "Low"].map((level) => (
             <button
               key={level}
@@ -115,13 +122,13 @@ const RiskModules = () => {
         </select>
       </div>
 
-      <div className="hidden md:grid grid-cols-[1fr_100px_120px_140px] gap-4 px-4 text-xs text-base-content/45 font-medium">
+      <div className="hidden md:grid grid-cols-[1fr_100px_120px_120px_140px] gap-4 px-4 text-xs opacity-50 font-medium">
         <span>File</span>
         <span>Risk</span>
         <span>Bug Probability</span>
+        <span>Confidence</span>
         <span>Technical Debt</span>
       </div>
-
       <div className="flex flex-col gap-2.5">
         {files.map((file) => (
           <div
@@ -129,8 +136,8 @@ const RiskModules = () => {
             className="collapse collapse-arrow bg-linear-to-br from-base-100 to-base-200 shadow-clay-sm hover:shadow-clay rounded-[1.25rem] transition-shadow duration-200 cursor-pointer"
           >
             <input type="checkbox" />
-            <div className="collapse-title grid grid-cols-2 md:grid-cols-[1fr_100px_120px_140px] gap-4 items-center pr-10">
-              <span className="font-mono text-xs sm:text-sm text-base-content/85 truncate">
+            <div className="collapse-title grid grid-cols-2 md:grid-cols-[1fr_100px_120px_120px_140px] gap-4 items-center pr-10">
+              <span className="font-mono text-sm truncate">
                 {file.file_path}
               </span>
               <span
@@ -138,10 +145,13 @@ const RiskModules = () => {
               >
                 {file.risk_level}
               </span>
-              <span className="text-sm text-base-content/75">
+              <span className="text-sm">
                 {Math.round(file.bug_probability * 100)}%
               </span>
-              <span className="text-sm text-base-content/75">
+              <span className="text-sm opacity-70">
+                {Math.round(file.confidence * 100)}%
+              </span>
+              <span className="text-sm">
                 {file.technical_debt_score.toFixed(1)}
               </span>
             </div>
@@ -200,7 +210,9 @@ const RiskModules = () => {
         ))}
 
         {files.length === 0 && (
-          <p className="text-sm text-base-content/55">No files match this filter.</p>
+          <p className="text-sm text-base-content/55">
+            No files match this filter.
+          </p>
         )}
       </div>
     </div>
