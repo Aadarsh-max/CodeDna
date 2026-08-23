@@ -31,7 +31,7 @@ export const generateReportPdf = (report) => {
     ensureSpace(LINE_HEIGHT + 4);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(size);
-    doc.setTextColor(20, 20, 20);
+    doc.setTextColor(14, 140, 126);
     doc.text(text, MARGIN, y);
     y += LINE_HEIGHT + 2;
   };
@@ -67,7 +67,7 @@ export const generateReportPdf = (report) => {
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
-  doc.setTextColor(20, 20, 20);
+  doc.setTextColor(27, 34, 30);
   doc.text(report.repository?.name || "Repository Report", MARGIN, y);
   y += 10;
 

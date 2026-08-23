@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Dna, Menu, UploadCloud, LogOut } from "lucide-react";
+import { Dna, UploadCloud, LogOut } from "lucide-react";
 import useAuth from "../../hooks/useAuth.js";
 
 const Navbar = () => {
@@ -8,16 +8,10 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100/80 backdrop-blur-md shadow-clay-edge-b px-4 sm:px-6 sticky top-0 z-30 min-h-16">
       <div className="flex-1 flex items-center gap-2.5 sm:gap-3">
-        <label
-          htmlFor="app-drawer"
-          className="lg:hidden p-2 -ml-1 rounded-full text-base-content/60 hover:text-primary hover:bg-base-300/40 transition-colors duration-150 cursor-pointer"
-        >
-          <Menu size={20} strokeWidth={2} />
-        </label>
-        <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-linear-to-br from-base-100 to-base-200 shadow-clay-sm text-primary">
+        <div className="animate-glow-pulse flex items-center justify-center w-8 h-8 rounded-xl bg-linear-to-br from-base-100 to-base-200 shadow-clay-sm text-primary">
           <Dna size={17} strokeWidth={2.2} />
         </div>
-        <span className="font-display text-lg sm:text-xl font-semibold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        <span className="font-display text-lg sm:text-xl font-semibold tracking-tight bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
           CodeDNA
         </span>
       </div>

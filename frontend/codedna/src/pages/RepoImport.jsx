@@ -98,29 +98,37 @@ const RepoImport = () => {
   const isAnalyzing = activeAnalysisId && analysis?.status !== "failed";
 
   return (
-    <div className="max-w-3xl mx-auto flex flex-col gap-8">
+    <div className="max-w-3xl mx-auto flex flex-col gap-7 sm:gap-8">
       <div>
-        <h1 className="font-display text-2xl font-semibold mb-1">
+        <h1 className="font-display text-xl sm:text-2xl font-semibold mb-1 text-base-content">
           Import a Repository
         </h1>
-        <p className="text-sm opacity-60">
+        <p className="text-sm text-base-content/55">
           Connect a GitHub repo or upload a ZIP to begin analysis.
         </p>
       </div>
 
-      <div className="bg-base-200 border border-base-300 rounded-box p-6">
-        <div role="tablist" className="tabs tabs-boxed w-fit mb-6">
+      <div className="bg-linear-to-br from-base-100 to-base-200 shadow-clay rounded-[1.5rem] p-5 sm:p-6">
+        <div role="tablist" className="flex gap-1 p-1 rounded-field bg-base-200 shadow-clay-pressed w-fit mb-6 overflow-x-auto">
           <button
             role="tab"
             onClick={() => setActiveTab("github")}
-            className={`tab ${activeTab === "github" ? "tab-active" : ""}`}
+            className={`px-3 sm:px-4 py-1.5 rounded-field text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer ${
+              activeTab === "github"
+                ? "bg-base-100 shadow-clay-sm text-primary"
+                : "text-base-content/55 hover:text-base-content"
+            }`}
           >
             GitHub URL
           </button>
           <button
             role="tab"
             onClick={() => setActiveTab("zip")}
-            className={`tab ${activeTab === "zip" ? "tab-active" : ""}`}
+            className={`px-3 sm:px-4 py-1.5 rounded-field text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer ${
+              activeTab === "zip"
+                ? "bg-base-100 shadow-clay-sm text-primary"
+                : "text-base-content/55 hover:text-base-content"
+            }`}
           >
             Upload ZIP
           </button>
@@ -134,12 +142,12 @@ const RepoImport = () => {
               onChange={(e) => setGithubUrl(e.target.value)}
               placeholder="https://github.com/owner/repo"
               required
-              className="input input-bordered w-full font-mono text-sm"
+              className="w-full rounded-field bg-base-100 border border-base-300/60 px-4 py-2.5 font-mono text-sm text-base-content placeholder:text-base-content/30 shadow-clay-pressed focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow duration-200"
             />
             <button
               type="submit"
               disabled={submitting}
-              className="btn btn-primary w-fit"
+              className="rounded-field bg-primary text-primary-content font-medium px-5 py-2.5 shadow-clay-sm hover:shadow-clay hover:-translate-y-0.5 active:translate-y-0 active:shadow-clay-pressed transition-all duration-200 disabled:opacity-60 disabled:hover:translate-y-0 w-fit flex items-center gap-2"
             >
               {submitting ? (
                 <span className="loading loading-spinner loading-sm"></span>
@@ -155,12 +163,12 @@ const RepoImport = () => {
               accept=".zip"
               onChange={(e) => setFile(e.target.files[0])}
               required
-              className="file-input file-input-bordered w-full"
+              className="file-input w-full rounded-field bg-base-100 border border-base-300/60 shadow-clay-pressed file:cursor-pointer"
             />
             <button
               type="submit"
               disabled={submitting}
-              className="btn btn-primary w-fit"
+              className="rounded-field bg-primary text-primary-content font-medium px-5 py-2.5 shadow-clay-sm hover:shadow-clay hover:-translate-y-0.5 active:translate-y-0 active:shadow-clay-pressed transition-all duration-200 disabled:opacity-60 disabled:hover:translate-y-0 w-fit flex items-center gap-2"
             >
               {submitting ? (
                 <span className="loading loading-spinner loading-sm"></span>
@@ -173,11 +181,11 @@ const RepoImport = () => {
       </div>
 
       {isAnalyzing && (
-        <div className="bg-base-200 border border-primary/40 rounded-box p-6 flex items-center gap-4">
-          <span className="loading loading-spinner loading-md text-primary"></span>
+        <div className="bg-linear-to-br from-base-100 to-base-200 shadow-clay rounded-[1.5rem] p-5 sm:p-6 flex items-center gap-4 ring-1 ring-primary/15">
+          <span className="loading loading-spinner loading-md text-primary shrink-0"></span>
           <div>
-            <p className="font-medium">Analyzing repository...</p>
-            <p className="text-sm opacity-60">
+            <p className="font-medium text-base-content">Analyzing repository...</p>
+            <p className="text-sm text-base-content/55">
               This runs parsing, risk prediction, maintainability scoring,
               refactor planning, and documentation generation. Can take a minute
               or more, especially for larger repos.
@@ -187,12 +195,12 @@ const RepoImport = () => {
       )}
 
       {analysis?.status === "failed" && (
-        <div className="bg-base-200 border border-error/40 rounded-box p-6">
+        <div className="bg-linear-to-br from-base-100 to-base-200 shadow-clay rounded-[1.5rem] p-5 sm:p-6 ring-1 ring-error/20">
           <p className="text-error font-medium">Analysis failed</p>
-          <p className="text-sm opacity-70 mt-1">{analysis.error}</p>
+          <p className="text-sm text-base-content/60 mt-1">{analysis.error}</p>
           <button
             onClick={() => setActiveAnalysisId(null)}
-            className="btn btn-ghost btn-sm mt-3"
+            className="rounded-field text-sm font-medium px-4 py-1.5 mt-3 text-base-content/60 hover:text-base-content hover:bg-base-300/40 transition-colors duration-150"
           >
             Dismiss
           </button>
@@ -200,41 +208,41 @@ const RepoImport = () => {
       )}
 
       <div>
-        <h2 className="font-display text-lg font-semibold mb-3">
+        <h2 className="font-display text-base sm:text-lg font-semibold mb-3 text-base-content">
           Your Repositories
         </h2>
 
         {loading ? (
           <div className="flex flex-col gap-3">
-            <div className="skeleton h-20 w-full rounded-box"></div>
-            <div className="skeleton h-20 w-full rounded-box"></div>
+            <div className="skeleton h-20 w-full rounded-[1.5rem]"></div>
+            <div className="skeleton h-20 w-full rounded-[1.5rem]"></div>
           </div>
         ) : repos.length === 0 ? (
-          <p className="text-sm opacity-60">No repositories imported yet.</p>
+          <p className="text-sm text-base-content/55">No repositories imported yet.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {repos.map((repo) => (
               <div
                 key={repo._id}
-                className="card bg-base-200 border border-base-300 hover:border-primary/50 transition-colors"
+                className="bg-linear-to-br from-base-100 to-base-200 shadow-clay-sm hover:shadow-clay rounded-[1.5rem] transition-all duration-200 hover:-translate-y-0.5"
               >
-                <div className="card-body p-4 gap-3">
-                  <div>
-                    <h3 className="font-mono text-sm font-medium">
+                <div className="p-4 sm:p-5 flex flex-col gap-3">
+                  <div className="min-w-0">
+                    <h3 className="font-mono text-sm font-medium text-base-content truncate">
                       {repo.name}
                     </h3>
-                    <div className="flex gap-2 items-center text-xs opacity-60 mt-1">
-                      <span className="badge badge-sm badge-neutral">
+                    <div className="flex gap-2 items-center text-xs text-base-content/55 mt-1">
+                      <span className="px-2 py-0.5 rounded-full bg-base-200 shadow-clay-pressed text-[11px] font-medium">
                         {repo.source}
                       </span>
                       {repo.language && <span>{repo.language}</span>}
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <button
                       onClick={() => handleAnalyze(repo._id)}
                       disabled={startingRepoId === repo._id || isAnalyzing}
-                      className="btn btn-primary btn-sm w-fit"
+                      className="rounded-field bg-primary text-primary-content text-sm font-medium px-4 py-1.5 shadow-clay-sm hover:shadow-clay hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-60 disabled:hover:translate-y-0 w-fit flex items-center gap-2"
                     >
                       {startingRepoId === repo._id ? (
                         <span className="loading loading-spinner loading-xs"></span>
@@ -245,7 +253,7 @@ const RepoImport = () => {
                     {lastAnalysisByRepo[repo._id] && (
                       <Link
                         to={`/dashboard/${lastAnalysisByRepo[repo._id]}`}
-                        className="text-xs text-primary hover:underline"
+                        className="text-xs text-primary hover:underline underline-offset-4 cursor-pointer"
                       >
                         View Last Report →
                       </Link>

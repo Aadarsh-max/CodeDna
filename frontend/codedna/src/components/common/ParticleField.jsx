@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const COLORS = ["#0E8C7E", "#6D5FC4", "#8B7FD6", "#5EEAD4"];
+const COLORS = ["#0E8C7E", "#0E8C7E", "#6D5FC4", "#6D5FC4", "#8B7FD6", "#5EEAD4", "#C98A2E"];
 const LINK_DISTANCE = 130;
 
 const ParticleField = () => {

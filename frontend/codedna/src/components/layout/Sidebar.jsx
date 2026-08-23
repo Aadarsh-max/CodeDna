@@ -1,31 +1,51 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { UploadCloud, LayoutDashboard, Network, ShieldAlert, Wrench, FileText } from "lucide-react";
+import { motion } from "framer-motion";
+import { UploadCloud, LayoutDashboard, Network, ShieldAlert, Wrench, FileText, ChevronLeft } from "lucide-react";
 import useAnalysis from "../../hooks/useAnalysis.js";
 
 const Sidebar = () => {
   const { currentAnalysisId } = useAnalysis();
+  const [collapsed, setCollapsed] = useState(false);
 
   const links = [
-    { to: "/", label: "Import", icon: UploadCloud, requiresAnalysis: false },
-    { to: `/dashboard/${currentAnalysisId}`, label: "Dashboard", icon: LayoutDashboard, requiresAnalysis: true },
-    { to: `/architecture/${currentAnalysisId}`, label: "Architecture", icon: Network, requiresAnalysis: true },
-    { to: `/risks/${currentAnalysisId}`, label: "Risk Modules", icon: ShieldAlert, requiresAnalysis: true },
-    { to: `/refactor/${currentAnalysisId}`, label: "Refactor Plan", icon: Wrench, requiresAnalysis: true },
-    { to: `/report/${currentAnalysisId}`, label: "Report", icon: FileText, requiresAnalysis: true },
+    { to: "/", label: "Import", icon: UploadCloud, requiresAnalysis: false, color: "#0E8C7E" },
+    { to: `/dashboard/${currentAnalysisId}`, label: "Dashboard", icon: LayoutDashboard, requiresAnalysis: true, color: "#6D5FC4" },
+    { to: `/architecture/${currentAnalysisId}`, label: "Architecture", icon: Network, requiresAnalysis: true, color: "#8B7FD6" },
+    { to: `/risks/${currentAnalysisId}`, label: "Risk Modules", icon: ShieldAlert, requiresAnalysis: true, color: "#C6493D" },
+    { to: `/refactor/${currentAnalysisId}`, label: "Refactor Plan", icon: Wrench, requiresAnalysis: true, color: "#C98A2E" },
+    { to: `/report/${currentAnalysisId}`, label: "Report", icon: FileText, requiresAnalysis: true, color: "#3B82A6" },
   ];
 
   return (
-    <aside className="w-[78vw] max-w-64 lg:w-64 min-h-full bg-linear-to-b from-base-100 to-base-200 shadow-clay-edge-r rounded-r-[1.5rem] lg:rounded-none p-4 flex flex-col gap-1">
-      <ul className="flex flex-col gap-1.5">
-        {links.map(({ to, label, icon: Icon, requiresAnalysis }) => {
+    <motion.aside
+      animate={{ width: collapsed ? 84 : 248 }}
+      transition={{ type: "spring", stiffness: 260, damping: 28 }}
+      className="hidden lg:flex flex-col shrink-0 min-h-screen bg-linear-to-b from-base-100 to-base-200 shadow-clay-edge-r relative"
+    >
+      <button
+        onClick={() => setCollapsed((v) => !v)}
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        className="absolute -right-3 top-8 w-6 h-6 rounded-full bg-base-100 shadow-clay-sm flex items-center justify-center text-base-content/50 hover:text-primary transition-colors duration-150 cursor-pointer z-10"
+      >
+        <motion.span animate={{ rotate: collapsed ? 180 : 0 }} transition={{ duration: 0.25 }}>
+          <ChevronLeft size={14} strokeWidth={2.4} />
+        </motion.span>
+      </button>
+
+      <ul className="flex flex-col gap-1.5 p-4 pt-8">
+        {links.map(({ to, label, icon: Icon, requiresAnalysis, color }) => {
           const disabled = requiresAnalysis && !currentAnalysisId;
 
           if (disabled) {
             return (
               <li key={label}>
-                <span className="flex items-center gap-3 px-3.5 py-2.5 rounded-field text-sm font-medium text-base-content/25 shadow-clay-pressed opacity-60 cursor-not-allowed">
+                <span
+                  title={collapsed ? label : undefined}
+                  className={`relative flex items-center gap-3 px-3.5 py-2.5 rounded-field text-sm font-medium text-base-content/25 shadow-clay-pressed opacity-60 cursor-not-allowed ${collapsed ? "justify-center" : ""}`}
+                >
                   <Icon size={17} strokeWidth={2} />
-                  {label}
+                  {!collapsed && label}
                 </span>
               </li>
             );
@@ -35,22 +55,37 @@ const Sidebar = () => {
             <li key={label}>
               <NavLink
                 to={to}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-field text-sm font-medium transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? "bg-base-100 shadow-clay-pressed text-primary"
-                      : "text-base-content/65 hover:text-base-content hover:bg-base-100 hover:shadow-clay-sm"
-                  }`
-                }
+                title={collapsed ? label : undefined}
+                className={`relative flex items-center gap-3 px-3.5 py-2.5 rounded-field text-sm font-medium transition-colors duration-200 cursor-pointer ${
+                  collapsed ? "justify-center" : ""
+                }`}
               >
-                <Icon size={17} strokeWidth={2} />
-                {label}
+                {({ isActive }) => (
+                  <>
+                    {isActive && (
+                      <motion.div
+                        layoutId="sidebar-active-pill"
+                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                        className="absolute inset-0 rounded-field shadow-clay-pressed"
+                        style={{ backgroundColor: `${color}18` }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-3">
+                      <Icon size={17} strokeWidth={2} style={{ color: isActive ? color : undefined }} className={isActive ? "" : "text-base-content/55"} />
+                      {!collapsed && (
+                        <span className={`whitespace-nowrap ${isActive ? "text-base-content" : "text-base-content/60"}`}>
+                          {label}
+                        </span>
+                      )}
+                    </span>
+                  </>
+                )}
               </NavLink>
             </li>
           );
         })}
       </ul>
-    </aside>
+    </motion.aside>
   );
 };
 
