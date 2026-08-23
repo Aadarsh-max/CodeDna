@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { UploadCloud, LayoutDashboard, Network, ShieldAlert, Wrench, FileText, TrendingUp } from "lucide-react";
+import { UploadCloud, LayoutDashboard, Network, ShieldAlert, Wrench, FileText, TrendingUp,ChevronLeft } from "lucide-react";
 import useAnalysis from "../../hooks/useAnalysis.js";
 
 const Sidebar = () => {

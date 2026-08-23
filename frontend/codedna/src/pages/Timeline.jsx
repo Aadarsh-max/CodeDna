@@ -55,39 +55,44 @@ const Timeline = () => {
   }
 
   if (error) {
-    return <p className="text-error">{error}</p>;
+    return (
+      <p className="text-error text-sm bg-error/10 border border-error/20 rounded-field px-4 py-3 inline-block">
+        {error}
+      </p>
+    );
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 sm:gap-5">
       <div>
-        <h1 className="font-display text-2xl font-semibold">Evolution Timeline</h1>
-        <p className="text-sm opacity-60">
+        <h1 className="font-display text-xl sm:text-2xl font-semibold text-base-content">Evolution Timeline</h1>
+        <p className="text-sm text-base-content/55">
           {repoName} — {history.length} completed analysis{history.length !== 1 ? "es" : ""}
         </p>
       </div>
 
       {history.length < 2 ? (
-        <div className="bg-base-200 border border-base-300 rounded-box p-6">
-          <p className="text-sm opacity-70">
-            Only one completed analysis exists for this repository yet. Analyze it again after making changes to start tracking how its maintainability and risk change over time.
+        <div className="bg-linear-to-br from-base-100 to-base-200 shadow-clay rounded-[1.5rem] p-5 sm:p-6">
+          <p className="text-sm text-base-content/70">
+            Only one completed analysis exists for this repository yet. Analyze it again after making changes to
+            start tracking how its maintainability and risk change over time.
           </p>
         </div>
       ) : (
-        <div className="bg-base-200 border border-base-300 rounded-box p-6">
+        <div className="bg-base-200 shadow-clay-pressed rounded-[1.5rem] p-4 sm:p-6">
           <ResponsiveContainer width="100%" height={380}>
             <LineChart data={history} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1A1F2B" />
-              <XAxis dataKey="date" stroke="#E8EAED" tick={{ fontSize: 12, fill: "#E8EAED", opacity: 0.6 }} />
-              <YAxis stroke="#E8EAED" tick={{ fontSize: 12, fill: "#E8EAED", opacity: 0.6 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#DEDACC" />
+              <XAxis dataKey="date" stroke="#1B221E" tick={{ fontSize: 12, fill: "#1B221E", opacity: 0.55 }} />
+              <YAxis stroke="#1B221E" tick={{ fontSize: 12, fill: "#1B221E", opacity: 0.55 }} />
               <Tooltip
-                contentStyle={{ backgroundColor: "#12161F", border: "1px solid #1A1F2B", borderRadius: 8, fontSize: 12 }}
-                labelStyle={{ color: "#E8EAED" }}
+                contentStyle={{ backgroundColor: "#F1EFE8", border: "1px solid #DEDACC", borderRadius: 12, fontSize: 12 }}
+                labelStyle={{ color: "#1B221E" }}
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Line type="monotone" dataKey="maintainability" name="Maintainability" stroke="#5EEAD4" strokeWidth={2} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="bugRisk" name="Avg Bug Risk %" stroke="#F0554B" strokeWidth={2} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="highRiskFiles" name="High Risk Files" stroke="#F2B84B" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="maintainability" name="Maintainability" stroke="#0E8C7E" strokeWidth={2.5} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="bugRisk" name="Avg Bug Risk %" stroke="#C6493D" strokeWidth={2.5} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="highRiskFiles" name="High Risk Files" stroke="#C98A2E" strokeWidth={2.5} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
