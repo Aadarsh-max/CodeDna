@@ -11,7 +11,7 @@ const Navbar = () => {
         <div className="animate-glow-pulse flex items-center justify-center w-8 h-8 rounded-xl bg-linear-to-br from-base-100 to-base-200 shadow-clay-sm text-primary">
           <Dna size={17} strokeWidth={2.2} />
         </div>
-        <span className="font-display text-lg sm:text-xl font-semibold tracking-tight bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+        <span className="font-display text-lg sm:text-xl font-semibold tracking-tight bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
           CodeDNA
         </span>
       </div>
