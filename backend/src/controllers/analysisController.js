@@ -8,6 +8,7 @@ import {
   explainPredictions,
   generateDocumentation,
   getDependencyGraph,
+  scanSecurity,
 } from "../services/aiServiceClient.js";
 
 const runAnalysisPipeline = async (analysisId, repository) => {
@@ -26,6 +27,12 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       source: repository.source,
     });
 
+    const security = await scanSecurity({
+      githubUrl: repository.githubUrl,
+      zipPath: repository.zipPath,
+      source: repository.source,
+    });
+
     const predictions = await predictRisk(parsed);
     const maintainabilityScore = await computeFuzzyScore(parsed.metrics);
     const refactorPlan = await generateRefactorPlan(parsed.metrics);
@@ -37,7 +44,9 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       averageBugProbability: predictions.average_bug_probability,
       highRiskFileCount: predictions.high_risk_file_count,
       averageMaintainability: maintainabilityScore.average_maintainability,
-      topRefactorActions: refactorPlan.slice(0, 5).map((step) => `${step.action} on ${step.target}`),
+      topRefactorActions: refactorPlan
+        .slice(0, 5)
+        .map((step) => `${step.action} on ${step.target}`),
     });
 
     await AnalysisResult.findByIdAndUpdate(analysisId, {

@@ -75,6 +75,29 @@ def collect_source_files(root_dir: str) -> list[str]:
                 matched_files.append(os.path.join(current_dir, file_name))
     return matched_files
 
+def read_repository_files(source: str, github_url: str | None, zip_path: str | None) -> dict[str, str]:
+    if source == "github":
+        if not github_url:
+            raise InvalidRequestError("githubUrl is required when source is 'github'")
+        root_dir = clone_repository(github_url)
+    elif source == "zip":
+        if not zip_path:
+            raise InvalidRequestError("zipPath is required when source is 'zip'")
+        root_dir = extract_zip(zip_path)
+    else:
+        raise InvalidRequestError("source must be either 'github' or 'zip'")
+
+    try:
+        source_files = collect_source_files(root_dir)
+        file_contents = {}
+        for file_path in source_files:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                content = f.read()
+            relative_path = os.path.relpath(file_path, root_dir).replace("\\", "/")
+            file_contents[relative_path] = content
+        return file_contents
+    finally:
+        shutil.rmtree(root_dir, ignore_errors=True)
 
 def extract_import_targets(content: str, language: str) -> list[str]:
     if language in ("javascript", "typescript"):

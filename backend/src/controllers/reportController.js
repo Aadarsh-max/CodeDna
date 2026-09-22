@@ -25,6 +25,7 @@ export const getReport = async (req, res) => {
     refactorPlanDraft: analysis.refactorPlan,
     graph: analysis.graph,
     refactorPlan,
+    security: analysis.security,
   });
 };
 

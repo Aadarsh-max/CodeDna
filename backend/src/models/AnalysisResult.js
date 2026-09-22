@@ -24,11 +24,15 @@ const analysisResultSchema = new mongoose.Schema(
     explanations: mongoose.Schema.Types.Mixed,
     documentation: mongoose.Schema.Types.Mixed,
     graph: mongoose.Schema.Types.Mixed,
+    security: mongoose.Schema.Types.Mixed,
     error: {
       type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const AnalysisResult = mongoose.model("AnalysisResult", analysisResultSchema);
+export const AnalysisResult = mongoose.model(
+  "AnalysisResult",
+  analysisResultSchema,
+);

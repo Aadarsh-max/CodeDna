@@ -14,6 +14,7 @@ from app.utils.exceptions import (
     general_exception_handler,
 )
 from app.routers import parse, graph, fuzzy, genetic, predict, explain, llm
+from app.routers import parse, graph, fuzzy, genetic, predict, explain, llm, security
 
 app = FastAPI(
     title="CodeDNA AI Service",
@@ -26,6 +27,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_exception_handler(RepositoryProcessingError, repository_processing_error_handler)
 app.add_exception_handler(InvalidRequestError, invalid_request_error_handler)
 app.add_exception_handler(Exception, general_exception_handler)
+app.include_router(security.router)
 
 app.add_middleware(
     CORSMiddleware,

@@ -40,3 +40,8 @@ export const getDependencyGraph = async (payload) => {
   const response = await client.post("/graph", payload);
   return response.data;
 };
+
+export const scanSecurity = async (payload) => {
+  const response = await client.post("/security", payload);
+  return response.data;
+};
