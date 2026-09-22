@@ -22,14 +22,14 @@ def call_llm(prompt: str) -> str:
         response = client.chat.completions.create(
             model=settings.groq_model,
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=2048,
+            max_tokens=6000,
         )
         return response.choices[0].message.content.strip()
 
     response = ollama.chat(
         model=settings.ollama_model,
         messages=[{"role": "user", "content": prompt}],
-        options={"num_predict": 1500},
+        options={"num_predict": 4000},
     )
     return response["message"]["content"].strip()
 
@@ -126,9 +126,10 @@ Codebase data:
             "recommendations": parsed.get("recommendations", ""),
         }
     except json.JSONDecodeError:
+        logger.error("LLM response was not valid JSON, likely truncated")
         return {
             "repo_name": repo_name,
-            "summary": content,
+            "summary": "The AI-generated report could not be fully processed for this analysis. Please try analyzing this repository again.",
             "architecture_overview": "",
             "quality_assessment": "",
             "readme": "",

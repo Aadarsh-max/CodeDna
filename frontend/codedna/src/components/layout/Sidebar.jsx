@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   UploadCloud, LayoutDashboard, Network, ShieldAlert, Wrench, FileText,
-  TrendingUp, Lock, Copy, Trash2, Route, Database, BookOpen, Layers,
+  TrendingUp, Lock, Copy, Trash2, Route, Database, BookOpen, Layers, X,
 } from "lucide-react";
 import useAnalysis from "../../hooks/useAnalysis.js";
 
-const Sidebar = () => {
+const Sidebar = ({ open, onClose }) => {
   const { currentAnalysisId } = useAnalysis();
 
   const links = [
@@ -26,42 +27,74 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 min-h-full bg-base-200 shadow-clay-edge-r p-4">
-      <ul className="flex flex-col gap-1">
-        {links.map(({ to, label, icon: Icon, requiresAnalysis }) => {
-          const disabled = requiresAnalysis && !currentAnalysisId;
+    <>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/25 z-30 lg:hidden"
+            onClick={onClose}
+          />
+        )}
+      </AnimatePresence>
 
-          if (disabled) {
-            return (
-              <li key={label}>
-                <span className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-base-content/30 cursor-not-allowed">
+      <motion.aside
+        initial={false}
+        animate={{ width: open ? 256 : 0 }}
+        transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+        className="fixed lg:static top-16 lg:top-0 left-0 h-[calc(100vh-4rem)] bg-base-200 shadow-clay-edge-r overflow-hidden z-40"
+      >
+        <div className="w-64 h-full p-4 flex flex-col gap-1 overflow-y-auto">
+          <div className="flex items-center justify-between px-1 pb-2 lg:hidden">
+            <span className="text-xs font-semibold opacity-50 uppercase tracking-wide">Menu</span>
+            <button onClick={onClose} className="btn btn-ghost btn-xs btn-circle">
+              <X size={16} />
+            </button>
+          </div>
+
+          {links.map(({ to, label, icon: Icon, requiresAnalysis }, index) => {
+            const disabled = requiresAnalysis && !currentAnalysisId;
+
+            if (disabled) {
+              return (
+                <span
+                  key={label}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-base-content/30 cursor-not-allowed whitespace-nowrap"
+                >
                   <Icon size={17} strokeWidth={2} />
                   {label}
                 </span>
-              </li>
-            );
-          }
+              );
+            }
 
-          return (
-            <li key={label}>
-              <NavLink
-                to={to}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? "bg-primary/10 text-primary shadow-clay-pressed"
-                      : "text-base-content/70 hover:text-base-content hover:bg-base-300/40"
-                  }`
-                }
+            return (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.02, duration: 0.2 }}
               >
-                <Icon size={17} strokeWidth={2} />
-                {label}
-              </NavLink>
-            </li>
-          );
-        })}
-      </ul>
-    </aside>
+                <NavLink
+                  to={to}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                      isActive
+                        ? "bg-primary/10 text-primary shadow-clay-pressed"
+                        : "text-base-content/70 hover:text-base-content hover:bg-base-300/40 hover:translate-x-0.5"
+                    }`
+                  }
+                >
+                  <Icon size={17} strokeWidth={2} />
+                  {label}
+                </NavLink>
+              </motion.div>
+            );
+          })}
+        </div>
+      </motion.aside>
+    </>
   );
 };
 

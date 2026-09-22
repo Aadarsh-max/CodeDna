@@ -1,47 +1,38 @@
 import { motion } from "framer-motion";
-import { Dna, UploadCloud, LogOut } from "lucide-react";
+import { Dna, Menu, LogOut, Sparkles } from "lucide-react";
 import useAuth from "../../hooks/useAuth.js";
 
-const Navbar = () => {
+const Navbar = ({ onToggleSidebar }) => {
   const { user, logout } = useAuth();
 
   return (
-    <div className="navbar bg-base-100/80 backdrop-blur-md shadow-clay-edge-b px-4 sm:px-6 sticky top-0 z-30 min-h-16">
-      <div className="flex-1 flex items-center gap-2.5 sm:gap-3">
-        <div className="animate-glow-pulse flex items-center justify-center w-8 h-8 rounded-xl bg-linear-to-br from-base-100 to-base-200 shadow-clay-sm text-primary">
-          <Dna size={17} strokeWidth={2.2} />
+    <div className="h-16 navbar bg-base-200/60 backdrop-blur-md shadow-clay-edge-b px-3 sm:px-6 sticky top-0 z-50 flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2 min-w-0">
+        <button onClick={onToggleSidebar} className="btn btn-ghost btn-sm btn-circle shrink-0" aria-label="Toggle sidebar">
+          <Menu size={19} />
+        </button>
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary shrink-0">
+          <Dna size={18} strokeWidth={2.2} />
         </div>
-        <span className="font-display text-lg sm:text-xl font-semibold tracking-tight bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+        <span className="hidden sm:inline font-display text-xl font-semibold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent truncate">
           CodeDNA
         </span>
       </div>
 
-      <div className="flex-none gap-2 sm:gap-3 items-center flex">
-        {user && (
-          <div className="hidden sm:flex items-center gap-2 pr-1">
-            <div className="w-7 h-7 rounded-full bg-linear-to-br from-secondary to-accent flex items-center justify-center text-[11px] font-semibold text-secondary-content shadow-clay-sm">
-              {user.name?.[0]?.toUpperCase() || "U"}
-            </div>
-            <span className="text-sm text-base-content/70 max-w-28 truncate">{user.name}</span>
-          </div>
-        )}
-
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {user && <span className="hidden md:inline text-sm opacity-70 truncate max-w-[120px]">{user.name}</span>}
         <motion.button
-          whileHover={{ y: -2 }}
-          whileTap={{ y: 0 }}
-          className="rounded-field bg-primary text-primary-content text-sm font-medium px-3.5 sm:px-4 py-2 shadow-clay-sm hover:shadow-clay transition-shadow duration-200 flex items-center gap-1.5 cursor-pointer"
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+          className="btn btn-primary btn-sm shadow-md shadow-primary/20 gap-1.5 px-3 sm:px-4"
         >
-          <UploadCloud size={15} strokeWidth={2.2} />
+          <Sparkles size={14} />
           <span className="hidden sm:inline">Analyze Repo</span>
         </motion.button>
-
         {user && (
-          <button
-            onClick={logout}
-            aria-label="Log out"
-            className="p-2 rounded-full text-base-content/50 hover:text-error hover:bg-error/10 transition-colors duration-150 cursor-pointer"
-          >
-            <LogOut size={17} strokeWidth={2} />
+          <button onClick={logout} className="btn btn-ghost btn-sm gap-1.5" aria-label="Log out">
+            <LogOut size={16} />
+            <span className="hidden sm:inline">Log Out</span>
           </button>
         )}
       </div>
