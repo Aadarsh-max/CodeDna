@@ -15,6 +15,7 @@ export const importFromGithub = async (req, res) => {
     githubUrl,
     defaultBranch: metadata.defaultBranch,
     language: metadata.language,
+    databaseSchema: analysis.databaseSchema,
   });
 
   res.status(201).json(repository);

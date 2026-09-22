@@ -28,6 +28,7 @@ const analysisResultSchema = new mongoose.Schema(
     duplicates: mongoose.Schema.Types.Mixed,
     deadCode: mongoose.Schema.Types.Mixed,
     apiGraph: mongoose.Schema.Types.Mixed,
+    databaseSchema: mongoose.Schema.Types.Mixed,
     error: {
       type: String,
     },

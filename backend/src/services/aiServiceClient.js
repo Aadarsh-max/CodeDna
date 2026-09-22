@@ -57,3 +57,8 @@ export const getApiGraph = async (payload) => {
   const response = await client.post("/api-graph", payload);
   return response.data;
 };
+
+export const getDatabaseSchema = async (payload) => {
+  const response = await client.post("/database", payload);
+  return response.data;
+};

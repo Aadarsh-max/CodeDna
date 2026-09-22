@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { UploadCloud, LayoutDashboard, Network, ShieldAlert, Wrench, FileText, TrendingUp, Lock, Copy, Trash2, Route } from "lucide-react";
+import { UploadCloud, LayoutDashboard, Network, ShieldAlert, Wrench, FileText, TrendingUp, Lock, Copy, Trash2, Route, Database } from "lucide-react";
 import useAnalysis from "../../hooks/useAnalysis.js";
 
 const Sidebar = () => {
@@ -20,6 +20,7 @@ const Sidebar = () => {
     { to: `/duplicates/${currentAnalysisId}`, label: "Duplicate Code", icon: Copy, requiresAnalysis: true },
     { to: `/dead-code/${currentAnalysisId}`, label: "Dead Code", icon: Trash2, requiresAnalysis: true },
     { to: `/api-explorer/${currentAnalysisId}`, label: "API Explorer", icon: Route, requiresAnalysis: true },
+    { to: `/database/${currentAnalysisId}`, label: "Database", icon: Database, requiresAnalysis: true },
   ];
 
   return (

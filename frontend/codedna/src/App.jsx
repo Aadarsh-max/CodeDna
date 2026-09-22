@@ -16,6 +16,7 @@ import SecurityIssues from "./pages/SecurityIssues.jsx";
 import DuplicateCode from "./pages/DuplicateCode.jsx";
 import DeadCode from "./pages/DeadCode.jsx";
 import ApiExplorer from "./pages/ApiExplorer.jsx";
+import DatabaseSchema from "./pages/DatabaseSchema.jsx";
 
 const PageTransition = ({ children }) => (
   <motion.div
@@ -180,6 +181,18 @@ const App = () => {
                   <PageShell>
                     <PageTransition>
                       <ApiExplorer />
+                    </PageTransition>
+                  </PageShell>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/database/:analysisId"
+              element={
+                <ProtectedRoute>
+                  <PageShell>
+                    <PageTransition>
+                      <DatabaseSchema />
                     </PageTransition>
                   </PageShell>
                 </ProtectedRoute>
