@@ -26,6 +26,7 @@ export const getReport = async (req, res) => {
     graph: analysis.graph,
     refactorPlan,
     security: analysis.security,
+    duplicates: analysis.duplicates,
   });
 };
 

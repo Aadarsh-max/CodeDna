@@ -13,6 +13,7 @@ import Refactoring from "./pages/Refactoring.jsx";
 import Report from "./pages/Report.jsx";
 import Timeline from "./pages/Timeline.jsx";
 import SecurityIssues from "./pages/SecurityIssues.jsx";
+import DuplicateCode from "./pages/DuplicateCode.jsx";
 
 const PageTransition = ({ children }) => (
   <motion.div
@@ -141,6 +142,18 @@ const App = () => {
                   <PageShell>
                     <PageTransition>
                       <SecurityIssues />
+                    </PageTransition>
+                  </PageShell>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/duplicates/:analysisId"
+              element={
+                <ProtectedRoute>
+                  <PageShell>
+                    <PageTransition>
+                      <DuplicateCode />
                     </PageTransition>
                   </PageShell>
                 </ProtectedRoute>

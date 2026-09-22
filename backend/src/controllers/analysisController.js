@@ -32,6 +32,12 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       zipPath: repository.zipPath,
       source: repository.source,
     });
+    
+    const duplicates = await scanDuplicates({
+      githubUrl: repository.githubUrl,
+      zipPath: repository.zipPath,
+      source: repository.source,
+    });
 
     const predictions = await predictRisk(parsed);
     const maintainabilityScore = await computeFuzzyScore(parsed.metrics);

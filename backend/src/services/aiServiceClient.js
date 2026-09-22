@@ -45,3 +45,7 @@ export const scanSecurity = async (payload) => {
   const response = await client.post("/security", payload);
   return response.data;
 };
+export const scanDuplicates = async (payload) => {
+  const response = await client.post("/duplicates", payload);
+  return response.data;
+};
