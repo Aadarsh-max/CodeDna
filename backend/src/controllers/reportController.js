@@ -27,6 +27,7 @@ export const getReport = async (req, res) => {
     refactorPlan,
     security: analysis.security,
     duplicates: analysis.duplicates,
+    deadCode: analysis.deadCode,
   });
 };
 

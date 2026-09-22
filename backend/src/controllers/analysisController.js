@@ -9,6 +9,8 @@ import {
   generateDocumentation,
   getDependencyGraph,
   scanSecurity,
+  scanDuplicates,
+  scanDeadCode,
 } from "../services/aiServiceClient.js";
 
 const runAnalysisPipeline = async (analysisId, repository) => {
@@ -32,8 +34,14 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       zipPath: repository.zipPath,
       source: repository.source,
     });
-    
+
     const duplicates = await scanDuplicates({
+      githubUrl: repository.githubUrl,
+      zipPath: repository.zipPath,
+      source: repository.source,
+    });
+
+    const deadCode = await scanDeadCode({
       githubUrl: repository.githubUrl,
       zipPath: repository.zipPath,
       source: repository.source,
@@ -59,6 +67,9 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       status: "completed",
       metrics: parsed.metrics,
       graph,
+      security,
+      duplicates,
+      deadCode,
       riskModules: predictions,
       maintainabilityScore,
       refactorPlan,

@@ -13,7 +13,7 @@ from app.utils.exceptions import (
     invalid_request_error_handler,
     general_exception_handler,
 )
-from app.routers import parse, graph, fuzzy, genetic, predict, explain, llm, security, duplicates
+from app.routers import parse, graph, fuzzy, genetic, predict, explain, llm, security, duplicates, dead_code
 
 app = FastAPI(
     title="CodeDNA AI Service",
@@ -48,6 +48,7 @@ app.include_router(explain.router)
 app.include_router(llm.router)
 app.include_router(security.router)
 app.include_router(duplicates.router)
+app.include_router(dead_code.router)
 
 
 @app.get("/health")

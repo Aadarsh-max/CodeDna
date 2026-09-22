@@ -49,3 +49,7 @@ export const scanDuplicates = async (payload) => {
   const response = await client.post("/duplicates", payload);
   return response.data;
 };
+export const scanDeadCode = async (payload) => {
+  const response = await client.post("/dead-code", payload);
+  return response.data;
+};

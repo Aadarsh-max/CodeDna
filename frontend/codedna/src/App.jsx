@@ -14,6 +14,7 @@ import Report from "./pages/Report.jsx";
 import Timeline from "./pages/Timeline.jsx";
 import SecurityIssues from "./pages/SecurityIssues.jsx";
 import DuplicateCode from "./pages/DuplicateCode.jsx";
+import DeadCode from "./pages/DeadCode.jsx";
 
 const PageTransition = ({ children }) => (
   <motion.div
@@ -154,6 +155,18 @@ const App = () => {
                   <PageShell>
                     <PageTransition>
                       <DuplicateCode />
+                    </PageTransition>
+                  </PageShell>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dead-code/:analysisId"
+              element={
+                <ProtectedRoute>
+                  <PageShell>
+                    <PageTransition>
+                      <DeadCode />
                     </PageTransition>
                   </PageShell>
                 </ProtectedRoute>
