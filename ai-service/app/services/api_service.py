@@ -3,7 +3,7 @@ import re
 from app.services.parser_service import SOURCE_EXTENSIONS
 
 EXPRESS_ROUTE_PATTERN = re.compile(
-    r'\b(?:app|router|\w*[Rr]outer)\.(get|post|put|delete|patch|all)\s*\(\s*[\'"`]([^\'"`]+)[\'"`]'
+    r'\b(?:app|\w*[Rr]out(?:er|e)s?)\.(get|post|put|delete|patch|all)\s*\(\s*[\'"`]([^\'"`]+)[\'"`]'
 )
 
 FASTAPI_ROUTE_PATTERN = re.compile(

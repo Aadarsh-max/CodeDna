@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+html {
+  font-size: 20px;
+}
 @import "tailwindcss";
 
 @plugin "daisyui" {
@@ -11,34 +14,34 @@
   prefersdark: false;
   color-scheme: light;
 
-  --color-base-100: #F1EFE8;
-  --color-base-200: #E9E6DC;
-  --color-base-300: #DEDACC;
-  --color-base-content: #1B221E;
+  --color-base-100: #f1efe8;
+  --color-base-200: #e9e6dc;
+  --color-base-300: #dedacc;
+  --color-base-content: #1b221e;
 
-  --color-primary: #0E8C7E;
-  --color-primary-content: #F1EFE8;
+  --color-primary: #0e8c7e;
+  --color-primary-content: #f1efe8;
 
-  --color-secondary: #6D5FC4;
-  --color-secondary-content: #F5F3EE;
+  --color-secondary: #6d5fc4;
+  --color-secondary-content: #f5f3ee;
 
-  --color-accent: #8B7FD6;
-  --color-accent-content: #211A3D;
+  --color-accent: #8b7fd6;
+  --color-accent-content: #211a3d;
 
-  --color-neutral: #DEDACC;
-  --color-neutral-content: #1B221E;
+  --color-neutral: #dedacc;
+  --color-neutral-content: #1b221e;
 
-  --color-info: #3B82A6;
-  --color-info-content: #F1EFE8;
+  --color-info: #3b82a6;
+  --color-info-content: #f1efe8;
 
-  --color-success: #0E8C7E;
-  --color-success-content: #F1EFE8;
+  --color-success: #0e8c7e;
+  --color-success-content: #f1efe8;
 
-  --color-warning: #C98A2E;
-  --color-warning-content: #2E1F00;
+  --color-warning: #c98a2e;
+  --color-warning-content: #2e1f00;
 
-  --color-error: #C6493D;
-  --color-error-content: #FDEEEC;
+  --color-error: #c6493d;
+  --color-error-content: #fdeeec;
 
   --radius-box: 1.75rem;
   --radius-field: 1rem;
@@ -56,10 +59,18 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: #F1EFE8;
+  background-color: #f1efe8;
   background-image:
-    radial-gradient(ellipse 900px 500px at 10% -10%, rgba(14, 140, 126, 0.07), transparent 60%),
-    radial-gradient(ellipse 700px 500px at 100% 0%, rgba(109, 95, 196, 0.06), transparent 60%);
+    radial-gradient(
+      ellipse 900px 500px at 10% -10%,
+      rgba(14, 140, 126, 0.07),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 700px 500px at 100% 0%,
+      rgba(109, 95, 196, 0.06),
+      transparent 60%
+    );
   background-attachment: fixed;
   min-height: 100vh;
   position: relative;
@@ -77,19 +88,25 @@ body::before {
 }
 
 .shadow-clay {
-  box-shadow: 9px 9px 20px rgba(58, 48, 26, 0.14), -9px -9px 20px rgba(255, 255, 255, 0.85);
+  box-shadow:
+    9px 9px 20px rgba(58, 48, 26, 0.14),
+    -9px -9px 20px rgba(255, 255, 255, 0.85);
 }
 
 .shadow-clay-sm {
-  box-shadow: 5px 5px 12px rgba(58, 48, 26, 0.12), -5px -5px 12px rgba(255, 255, 255, 0.8);
+  box-shadow:
+    5px 5px 12px rgba(58, 48, 26, 0.12),
+    -5px -5px 12px rgba(255, 255, 255, 0.8);
 }
 
 .shadow-clay-pressed {
-  box-shadow: inset 4px 4px 10px rgba(58, 48, 26, 0.14), inset -4px -4px 10px rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 4px 4px 10px rgba(58, 48, 26, 0.14),
+    inset -4px -4px 10px rgba(255, 255, 255, 0.7);
 }
 
 .shadow-clay-edge-b {
-  box-shadow: 0 8px 20px rgba(58, 48, 26, 0.10);
+  box-shadow: 0 8px 20px rgba(58, 48, 26, 0.1);
 }
 
 .shadow-clay-edge-r {
@@ -122,8 +139,13 @@ button:disabled,
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(14, 140, 126, 0.22); }
-  50% { box-shadow: 0 0 0 6px rgba(109, 95, 196, 0.10); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(14, 140, 126, 0.22);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(109, 95, 196, 0.1);
+  }
 }
 
 .animate-glow-pulse {
