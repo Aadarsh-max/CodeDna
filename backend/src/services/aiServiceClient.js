@@ -3,7 +3,7 @@ import { env } from "../config/env.js";
 
 const client = axios.create({
   baseURL: env.aiServiceUrl,
-  timeout: 6000000,
+  timeout: 900000,
 });
 
 export const parseRepository = async (payload) => {
@@ -45,14 +45,17 @@ export const scanSecurity = async (payload) => {
   const response = await client.post("/security", payload);
   return response.data;
 };
+
 export const scanDuplicates = async (payload) => {
   const response = await client.post("/duplicates", payload);
   return response.data;
 };
+
 export const scanDeadCode = async (payload) => {
   const response = await client.post("/dead-code", payload);
   return response.data;
 };
+
 export const getApiGraph = async (payload) => {
   const response = await client.post("/api-graph", payload);
   return response.data;
@@ -60,5 +63,15 @@ export const getApiGraph = async (payload) => {
 
 export const getDatabaseSchema = async (payload) => {
   const response = await client.post("/database", payload);
+  return response.data;
+};
+
+export const getApiDocumentation = async (payload) => {
+  const response = await client.post("/api-docs", payload);
+  return response.data;
+};
+
+export const analyzeCohesion = async (payload) => {
+  const response = await client.post("/cohesion", payload);
   return response.data;
 };

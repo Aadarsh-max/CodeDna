@@ -13,7 +13,11 @@ from app.utils.exceptions import (
     invalid_request_error_handler,
     general_exception_handler,
 )
-from app.routers import parse, graph, fuzzy, genetic, predict, explain, llm, security, duplicates, dead_code, api_graph, database
+from app.routers import (
+    parse, graph, fuzzy, genetic, predict, explain, llm,
+    security, duplicates, dead_code, api_graph, database,
+    api_docs, cohesion,
+)
 
 app = FastAPI(
     title="CodeDNA AI Service",
@@ -26,7 +30,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_exception_handler(RepositoryProcessingError, repository_processing_error_handler)
 app.add_exception_handler(InvalidRequestError, invalid_request_error_handler)
 app.add_exception_handler(Exception, general_exception_handler)
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -51,6 +54,8 @@ app.include_router(duplicates.router)
 app.include_router(dead_code.router)
 app.include_router(api_graph.router)
 app.include_router(database.router)
+app.include_router(api_docs.router)
+app.include_router(cohesion.router)
 
 
 @app.get("/health")

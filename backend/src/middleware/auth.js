@@ -11,7 +11,15 @@ export const protect = async (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
-  const decoded = jwt.verify(token, env.jwtSecret);
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, env.jwtSecret);
+  } catch (error) {
+    res.status(401);
+    throw new Error("Session expired, please log in again");
+  }
+
   req.user = await User.findById(decoded.id).select("-password");
   next();
 };

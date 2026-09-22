@@ -29,14 +29,13 @@ const analysisResultSchema = new mongoose.Schema(
     deadCode: mongoose.Schema.Types.Mixed,
     apiGraph: mongoose.Schema.Types.Mixed,
     databaseSchema: mongoose.Schema.Types.Mixed,
+    apiDocumentation: mongoose.Schema.Types.Mixed,
+    cohesion: mongoose.Schema.Types.Mixed,
     error: {
       type: String,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-export const AnalysisResult = mongoose.model(
-  "AnalysisResult",
-  analysisResultSchema,
-);
+export const AnalysisResult = mongoose.model("AnalysisResult", analysisResultSchema);

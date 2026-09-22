@@ -29,6 +29,9 @@ export const getReport = async (req, res) => {
     duplicates: analysis.duplicates,
     deadCode: analysis.deadCode,
     apiGraph: analysis.apiGraph,
+    databaseSchema: analysis.databaseSchema,
+    apiDocumentation: analysis.apiDocumentation,
+    cohesion: analysis.cohesion,
   });
 };
 

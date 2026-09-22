@@ -13,53 +13,29 @@ import {
   scanDeadCode,
   getApiGraph,
   getDatabaseSchema,
+  getApiDocumentation,
+  analyzeCohesion,
 } from "../services/aiServiceClient.js";
 
 const runAnalysisPipeline = async (analysisId, repository) => {
   try {
     await AnalysisResult.findByIdAndUpdate(analysisId, { status: "running" });
 
-    const parsed = await parseRepository({
+    const repoPayload = {
       githubUrl: repository.githubUrl,
       zipPath: repository.zipPath,
       source: repository.source,
-    });
+    };
 
-    const graph = await getDependencyGraph({
-      githubUrl: repository.githubUrl,
-      zipPath: repository.zipPath,
-      source: repository.source,
-    });
-
-    const security = await scanSecurity({
-      githubUrl: repository.githubUrl,
-      zipPath: repository.zipPath,
-      source: repository.source,
-    });
-
-    const duplicates = await scanDuplicates({
-      githubUrl: repository.githubUrl,
-      zipPath: repository.zipPath,
-      source: repository.source,
-    });
-
-    const deadCode = await scanDeadCode({
-      githubUrl: repository.githubUrl,
-      zipPath: repository.zipPath,
-      source: repository.source,
-    });
-
-    const apiGraph = await getApiGraph({
-      githubUrl: repository.githubUrl,
-      zipPath: repository.zipPath,
-      source: repository.source,
-    });
-
-    const databaseSchema = await getDatabaseSchema({
-      githubUrl: repository.githubUrl,
-      zipPath: repository.zipPath,
-      source: repository.source,
-    });
+    const parsed = await parseRepository(repoPayload);
+    const graph = await getDependencyGraph(repoPayload);
+    const security = await scanSecurity(repoPayload);
+    const duplicates = await scanDuplicates(repoPayload);
+    const deadCode = await scanDeadCode(repoPayload);
+    const apiGraph = await getApiGraph(repoPayload);
+    const databaseSchema = await getDatabaseSchema(repoPayload);
+    const apiDocumentation = await getApiDocumentation(repoPayload);
+    const cohesion = await analyzeCohesion(repoPayload);
 
     const predictions = await predictRisk(parsed);
     const maintainabilityScore = await computeFuzzyScore(parsed.metrics);
@@ -86,6 +62,8 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       deadCode,
       apiGraph,
       databaseSchema,
+      apiDocumentation,
+      cohesion,
       riskModules: predictions,
       maintainabilityScore,
       refactorPlan,
