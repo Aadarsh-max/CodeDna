@@ -11,6 +11,7 @@ import {
   scanSecurity,
   scanDuplicates,
   scanDeadCode,
+  getApiGraph,
 } from "../services/aiServiceClient.js";
 
 const runAnalysisPipeline = async (analysisId, repository) => {
@@ -47,6 +48,12 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       source: repository.source,
     });
 
+    const apiGraph = await getApiGraph({
+      githubUrl: repository.githubUrl,
+      zipPath: repository.zipPath,
+      source: repository.source,
+    });
+
     const predictions = await predictRisk(parsed);
     const maintainabilityScore = await computeFuzzyScore(parsed.metrics);
     const refactorPlan = await generateRefactorPlan(parsed.metrics);
@@ -70,6 +77,7 @@ const runAnalysisPipeline = async (analysisId, repository) => {
       security,
       duplicates,
       deadCode,
+      apiGraph,
       riskModules: predictions,
       maintainabilityScore,
       refactorPlan,

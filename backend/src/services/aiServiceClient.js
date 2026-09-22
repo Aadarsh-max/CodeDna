@@ -53,3 +53,7 @@ export const scanDeadCode = async (payload) => {
   const response = await client.post("/dead-code", payload);
   return response.data;
 };
+export const getApiGraph = async (payload) => {
+  const response = await client.post("/api-graph", payload);
+  return response.data;
+};

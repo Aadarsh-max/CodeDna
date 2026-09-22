@@ -15,6 +15,7 @@ import Timeline from "./pages/Timeline.jsx";
 import SecurityIssues from "./pages/SecurityIssues.jsx";
 import DuplicateCode from "./pages/DuplicateCode.jsx";
 import DeadCode from "./pages/DeadCode.jsx";
+import ApiExplorer from "./pages/ApiExplorer.jsx";
 
 const PageTransition = ({ children }) => (
   <motion.div
@@ -167,6 +168,18 @@ const App = () => {
                   <PageShell>
                     <PageTransition>
                       <DeadCode />
+                    </PageTransition>
+                  </PageShell>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/api-explorer/:analysisId"
+              element={
+                <ProtectedRoute>
+                  <PageShell>
+                    <PageTransition>
+                      <ApiExplorer />
                     </PageTransition>
                   </PageShell>
                 </ProtectedRoute>
