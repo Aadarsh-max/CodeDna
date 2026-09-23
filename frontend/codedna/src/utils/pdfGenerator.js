@@ -4,7 +4,20 @@ const MARGIN = 15;
 const PAGE_WIDTH = 210;
 const PAGE_HEIGHT = 297;
 const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
-const LINE_HEIGHT = 6;
+const MM_PER_PT = 0.3528;
+
+const sanitizeText = (text) => {
+  if (!text) return text;
+  return text
+    .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/\u2026/g, "...")
+    .replace(/\u00A0/g, " ")
+    .replace(/[\u2022\u25CF\u25E6\u2023]/g, "-")
+    .replace(/[\u251C\u2514\u2502\u2500\u250C\u2510\u2518\u2534\u252C\u253C\u2524]/g, "-")
+    .replace(/[^\x00-\xFF]/g, "");
+};
 
 const stripMarkdown = (text) => {
   return text
@@ -13,12 +26,14 @@ const stripMarkdown = (text) => {
     .replace(/\*\*(.*?)\*\*/g, "$1")
     .replace(/\*(.*?)\*/g, "$1")
     .replace(/`(.*?)`/g, "$1")
-    .replace(/^-\s+/gm, "• ");
+    .replace(/^-\s+/gm, "- ");
 };
 
 export const generateReportPdf = (report) => {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   let y = MARGIN;
+
+  const lineHeightFor = (fontSize) => fontSize * MM_PER_PT * 1.35;
 
   const ensureSpace = (needed) => {
     if (y + needed > PAGE_HEIGHT - MARGIN) {
@@ -28,24 +43,27 @@ export const generateReportPdf = (report) => {
   };
 
   const addHeading = (text, size = 14) => {
-    ensureSpace(LINE_HEIGHT + 4);
+    const lh = lineHeightFor(size);
+    ensureSpace(lh + 4);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(size);
-    doc.setTextColor(14, 140, 126);
-    doc.text(text, MARGIN, y);
-    y += LINE_HEIGHT + 2;
+    doc.setTextColor(20, 20, 20);
+    doc.text(sanitizeText(text), MARGIN, y);
+    y += lh + 3;
   };
 
-  const addParagraph = (text, size = 10) => {
-    if (!text) return;
+  const addParagraph = (rawText, size = 10) => {
+    if (!rawText) return;
+    const text = sanitizeText(rawText);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(size);
     doc.setTextColor(60, 60, 60);
+    const lh = lineHeightFor(size);
     const lines = doc.splitTextToSize(text, CONTENT_WIDTH);
     lines.forEach((line) => {
-      ensureSpace(LINE_HEIGHT);
+      ensureSpace(lh);
       doc.text(line, MARGIN, y);
-      y += LINE_HEIGHT;
+      y += lh;
     });
     y += 3;
   };
@@ -54,12 +72,14 @@ export const generateReportPdf = (report) => {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.setTextColor(60, 60, 60);
-    items.forEach((item) => {
-      const lines = doc.splitTextToSize(`•  ${item}`, CONTENT_WIDTH - 4);
+    const lh = lineHeightFor(10);
+    items.forEach((rawItem) => {
+      const item = sanitizeText(rawItem);
+      const lines = doc.splitTextToSize(`-  ${item}`, CONTENT_WIDTH - 4);
       lines.forEach((line, i) => {
-        ensureSpace(LINE_HEIGHT);
+        ensureSpace(lh);
         doc.text(line, MARGIN + (i === 0 ? 0 : 4), y);
-        y += LINE_HEIGHT;
+        y += lh;
       });
     });
     y += 3;
@@ -67,15 +87,15 @@ export const generateReportPdf = (report) => {
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
-  doc.setTextColor(27, 34, 30);
-  doc.text(report.repository?.name || "Repository Report", MARGIN, y);
-  y += 10;
+  doc.setTextColor(20, 20, 20);
+  doc.text(sanitizeText(report.repository?.name || "Repository Report"), MARGIN, y);
+  y += lineHeightFor(22) + 4;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.setTextColor(120, 120, 120);
-  doc.text(`CodeDNA Analysis Report — Generated ${new Date().toLocaleDateString()}`, MARGIN, y);
-  y += 12;
+  doc.text(`CodeDNA Analysis Report - Generated ${new Date().toLocaleDateString()}`, MARGIN, y);
+  y += lineHeightFor(10) + 8;
 
   const metrics = report.metrics || [];
   const maintainability = Math.round(report.maintainabilityScore?.average_maintainability ?? 0);
