@@ -26,6 +26,7 @@
     "react-router-dom": "^7.18.2",
     "reactflow": "^11.11.4",
     "recharts": "^3.10.1",
+    "remark-gfm": "^4.0.1",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
