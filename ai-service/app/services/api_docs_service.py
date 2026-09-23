@@ -22,7 +22,14 @@ def generate_api_documentation(repo_name: str, routes: list[dict]) -> dict:
     context = build_routes_context(repo_name, routes)
     limited_count = min(len(routes), MAX_ROUTES_FOR_DOCS)
 
-    prompt = f"""You are a technical writer creating API reference documentation. Based on the detected routes below, write a clear API reference in markdown. For each route, infer its likely purpose from its HTTP method and path naming, using ## headings for each route grouped logically, showing the method and path, a one-sentence description of its likely purpose, and noting if it appears to require authentication (based on path naming like /auth, /login, or similar). Respond with ONLY the markdown documentation, no extra commentary before or after it.
+    prompt = f"""You are a technical writer creating API reference documentation. Based on the detected routes below, write API reference documentation in markdown using this EXACT structure and nothing else:
+
+For each logical group of related routes, write a ## heading naming the group, then IMMEDIATELY a markdown table with this exact header row:
+
+| Method | Path | Description | Auth Required |
+|--------|------|--------------|----------------|
+
+Each row must have exactly four cells. Keep Description to one short sentence. Auth Required must be either "Yes" or "No" only, never a longer explanation. Do not write any paragraphs, bullet lists, or narrative text anywhere in the output — every route must appear as one row in one of these tables, with no exceptions. Do not add any text before the first heading or after the last table.
 
 {context}"""
 
