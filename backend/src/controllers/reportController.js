@@ -63,6 +63,9 @@ export const createRefactorPlan = async (req, res) => {
     action: step.action,
     target: step.target,
     description: step.description,
+    problem: step.problem,
+    pseudocodeBefore: step.pseudocode?.before,
+    pseudocodeAfter: step.pseudocode?.after,
     impactScore: step.impactScore,
   }));
 

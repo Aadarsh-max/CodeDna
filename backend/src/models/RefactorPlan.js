@@ -5,6 +5,9 @@ const stepSchema = new mongoose.Schema({
   action: String,
   target: String,
   description: String,
+  problem: String,
+  pseudocodeBefore: String,
+  pseudocodeAfter: String,
   impactScore: Number,
   status: {
     type: String,
