@@ -19,6 +19,9 @@ def extract_positive_class_values(shap_values):
 
 
 def explain_repository(metrics: list[dict]) -> list[dict]:
+    if not metrics:
+        return []
+
     model = get_model()
     data = pd.DataFrame(
         [[m["complexity_score"], m["lines_of_code"], m["import_count"], m["function_count"]] for m in metrics],
