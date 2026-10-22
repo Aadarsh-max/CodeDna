@@ -1,6 +1,6 @@
 import re
 
-FIELD_LINE_PATTERN = re.compile(r'^\s*([A-Za-z_]\w*)\s*:')
+TOP_LEVEL_KEY_PATTERN = re.compile(r'^\s*[\'"]?([A-Za-z_$][\w$]*)[\'"]?\s*:')
 
 MONGOOSE_SCHEMA_DECLARATION_PATTERN = re.compile(
     r'(?:const|let|var)\s+(\w+)\s*=\s*new\s+(?:mongoose\.)?Schema\s*\('
@@ -51,21 +51,60 @@ def extract_python_class_body(content: str, class_line_start: int) -> str:
     return "\n".join(body_lines)
 
 
+def split_top_level_entries(inner: str) -> list[str]:
+    entries = []
+    current = []
+    depth = 0
+    quote = None
+
+    for ch in inner:
+        if quote:
+            current.append(ch)
+            if ch == quote:
+                quote = None
+            continue
+
+        if ch in "'\"`":
+            quote = ch
+            current.append(ch)
+            continue
+
+        if ch in "{[(":
+            depth += 1
+        elif ch in "}])":
+            depth -= 1
+
+        if ch == "," and depth == 0:
+            entries.append("".join(current))
+            current = []
+        else:
+            current.append(ch)
+
+    if current:
+        entries.append("".join(current))
+
+    return entries
+
+
 def extract_fields_and_relationships(body: str) -> tuple[list[str], list[dict]]:
+    body = body.strip()
+    inner = body[1:-1] if body.startswith("{") and body.endswith("}") else body
+    inner = re.sub(r'(^|\s)//[^\n]*', r'\1', inner)
+
     fields = []
     relationships = []
-    current_field = None
 
-    for line in body.splitlines():
-        field_match = FIELD_LINE_PATTERN.match(line)
-        if field_match:
-            current_field = field_match.group(1)
-            if current_field not in fields:
-                fields.append(current_field)
+    for entry in split_top_level_entries(inner):
+        key_match = TOP_LEVEL_KEY_PATTERN.match(entry)
+        if not key_match:
+            continue
 
-        ref_match = MONGOOSE_REF_PATTERN.search(line)
-        if ref_match and current_field:
-            relationships.append({"field": current_field, "references": ref_match.group(1)})
+        field_name = key_match.group(1)
+        if field_name not in fields:
+            fields.append(field_name)
+
+        for ref in MONGOOSE_REF_PATTERN.findall(entry):
+            relationships.append({"field": field_name, "references": ref})
 
     return fields, relationships
 

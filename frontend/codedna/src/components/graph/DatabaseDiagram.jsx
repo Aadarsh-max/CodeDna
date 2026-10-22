@@ -1,12 +1,14 @@
 import { useMemo } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 
+const MAX_FIELDS_SHOWN = 10;
+
 const buildElements = (entities, relationships) => {
   const nodes = entities.map((entity) => {
-    const displayFields = entity.fields.slice(0, 8);
-    const extra = entity.fields.length > 8 ? `\n+${entity.fields.length - 8} more` : "";
+    const shown = entity.fields.slice(0, MAX_FIELDS_SHOWN).join(", ");
+    const extra = entity.fields.length > MAX_FIELDS_SHOWN ? `, +${entity.fields.length - MAX_FIELDS_SHOWN} more` : "";
     return {
-      data: { id: entity.name, label: `${entity.name}\n${displayFields.join(", ")}${extra}` },
+      data: { id: entity.name, label: `${entity.name}\n\n${shown}${extra}` },
     };
   });
 
@@ -25,14 +27,16 @@ const stylesheet = [
       "border-width": 2,
       "border-color": "#6D5FC4",
       shape: "round-rectangle",
-      width: 190,
-      height: 90,
+      width: "label",
+      height: "label",
+      padding: "16px",
       label: "data(label)",
       "text-wrap": "wrap",
+      "text-max-width": 220,
       "text-valign": "center",
       "text-halign": "center",
       "font-family": "IBM Plex Mono, monospace",
-      "font-size": 9,
+      "font-size": 12,
       color: "#1B221E",
     },
   },
@@ -48,11 +52,11 @@ const stylesheet = [
       "taxi-turn": "50%",
       label: "data(label)",
       "font-family": "IBM Plex Mono, monospace",
-      "font-size": 9,
+      "font-size": 11,
       color: "#0E8C7E",
-      "text-background-color": "#F1EFE8",
+      "text-background-color": "#E9E6DC",
       "text-background-opacity": 1,
-      "text-background-padding": 2,
+      "text-background-padding": 3,
     },
   },
 ];
@@ -64,15 +68,15 @@ const DatabaseDiagram = ({ entities, relationships }) => {
   }, [entities, relationships]);
 
   if (elements.length === 0) {
-    return <p className="text-sm opacity-60">No database entities detected.</p>;
+    return <p className="opacity-60">No database entities detected.</p>;
   }
 
   return (
-    <div className="h-[60vh] bg-base-200 rounded-box shadow-clay overflow-hidden">
+    <div className="h-[65vh] bg-base-200 rounded-box shadow-clay overflow-hidden">
       <CytoscapeComponent
         elements={elements}
         stylesheet={stylesheet}
-        layout={{ name: "breadthfirst", directed: true, spacingFactor: 1.6, padding: 50 }}
+        layout={{ name: "breadthfirst", directed: true, spacingFactor: 1.8, padding: 50 }}
         style={{ width: "100%", height: "100%" }}
         minZoom={0.3}
         maxZoom={2}

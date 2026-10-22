@@ -25,10 +25,12 @@ const stylesheet = [
       "border-width": 2,
       "border-color": "#0E8C7E",
       shape: "round-rectangle",
-      width: 120,
-      height: 44,
+      width: "label",
+      height: "label",
+      padding: "12px",
       label: "data(label)",
-      "text-wrap": "wrap",
+      "text-wrap": "ellipsis",
+      "text-max-width": 190,
       "text-valign": "center",
       "text-halign": "center",
       "font-family": "IBM Plex Mono, monospace",
@@ -98,10 +100,13 @@ const ApiExplorer = () => {
     setHovered(null);
   }, []);
 
-  const registerEvents = useCallback((cy) => {
-    cy.on("mouseover", "node", handleMouseOver);
-    cy.on("mouseout", "node", handleMouseOut);
-  }, [handleMouseOver, handleMouseOut]);
+  const registerEvents = useCallback(
+    (cy) => {
+      cy.on("mouseover", "node", handleMouseOver);
+      cy.on("mouseout", "node", handleMouseOut);
+    },
+    [handleMouseOver, handleMouseOut]
+  );
 
   if (loading) {
     return (
@@ -135,7 +140,7 @@ const ApiExplorer = () => {
 
       {apiGraph.total_routes === 0 ? (
         <div className="bg-base-200 rounded-box shadow-clay p-6">
-          <p className="opacity-70">No API routes detected — this may not be a web server project, or it uses a framework outside the detected Express/FastAPI/Flask patterns.</p>
+          <p className="opacity-70">No API routes detected — this may not be a web server project, or it uses a framework outside the detected Express/FastAPI/Flask/NestJS/Django patterns.</p>
         </div>
       ) : (
         <>
@@ -154,7 +159,7 @@ const ApiExplorer = () => {
                 <CytoscapeComponent
                   elements={elements}
                   stylesheet={stylesheet}
-                  layout={{ name: "grid", avoidOverlap: true, avoidOverlapPadding: 20, condense: false }}
+                  layout={{ name: "grid", avoidOverlap: true, avoidOverlapPadding: 24, condense: false }}
                   style={{ width: "100%", height: "100%" }}
                   minZoom={0.3}
                   maxZoom={2.5}
